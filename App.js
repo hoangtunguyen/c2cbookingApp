@@ -6,115 +6,56 @@ import { useIsFocused } from "@react-navigation/core";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import HomeScreen from "./screens/HomeScreen";
+import QRScreen from "./screens/QRScreen";
+import VoiceScreen from "./screens/VoiceScreen";
+import FavoriteScreen from "./screens/FavoriteScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
-const HomeScreen = ({ navigation }) => {
-  navigation.setOptions({
-    headerRight: () => (
-      <Button
-        title="Save"
-        onPress={() => {
-          //save the changes
-          navigation.replace("Home");
-        }}
-      />
-    )
-  });
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>HomeScreen</Text>
-      <Button title="Go To Details Screen !!" onPress={() => navigation.navigate("Details")} />
-    </View>
-  );
-};
-const DetailsScreen = () =>{
-  return(
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>DetailsScreen</Text>
-    </View>
-  );
-}
 
-const HomeStackNavigator = ({navigation, route}) =>{
-  if(route.state){
-    navigation.setOptions({
-      tabBarVisible: route.state.index > 0 ? false : true
-    })
-  }
-  return(
-    <HomeStack.Navigator
-    screenOptions={{
-      gestureEnabled: true,
-      gestureDirection: "horizontal",
-      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-
-    }}
-    headerMode="float"
-    animation="fade"
-    >
-      <HomeStack.Screen name="Home" component={HomeScreen}/>
-      <HomeStack.Screen name="Details" component={DetailsScreen}/>
-    </HomeStack.Navigator>
-  );
-}
-
-const SettingsScreen = ({ navigation }) => {
-  const isFocused = useIsFocused();
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ color: isFocused ? "green" : "black" }}>SettingsScreen</Text>
-      <Button title="Go To Home Screen" onPress={() => navigation.goBack()} />
-    </View>
-  );
-};
-function FeedScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>FeedScreen!</Text>
-    </View>
-  );
-}
-
-const HomeTabNavigator = ({navigation, route}) => {
-  // navigation.setOptions({headerTitle: getHeaderTitle(route)});
+const HomeTabNavigator = ({ navigation, route }) => {
   return (
     <Tab.Navigator
+      
+      initialRouteName="Home"
+      activeColor = "#adc"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
           if (route.name == "Home") {
             iconName = "home";
-          } else if (route.name == "Feed") {
-            iconName = "home";
-          } else if (route.name == "Settings") {
+          } else if (route.name == "QR") {
+            iconName = "qrcode";  
+          } else if (route.name == "Voice") {
+            iconName = "microphone";
+          } else if (route.name == "Favorite") {
+            iconName = "heart";
+          } else if (route.name == "Profile") {
             iconName = "user-circle";
           }
           return <Icon name={iconName} size={size} color={color} />;
         }
       })}
     >
-      <Tab.Screen name="Home" component={HomeStackNavigator} />
-      <Tab.Screen name="Feed" component={FeedScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="QR" component={QRScreen} />
+      <Tab.Screen
+        // options={{
+        //   tabBarLabel: '',
+        // }}
+        name="Voice"
+        component={VoiceScreen} />
+      <Tab.Screen name="Favorite" component={FavoriteScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
-function getHeaderTitle(route) {
-  const routeName = route.state ?
-    route.state.routes[route.state.index].name
-    : 'Home';
-  switch (routeName) {
-    case "Home":
-      return "Homess";
-    case "Feed":
-      return "Feed";
-    case "Settings":
-      return "Settings";
-  }
-}
 
-function isHeaderShown(route){
+
+function isHeaderShown(route) {
   const routeName = route.state ?
     route.state.routes[route.state.index].name
     : 'Home';
@@ -127,21 +68,13 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        // screenOptions={{
-        //   gestureEnabled: true,
-        //   gestureDirection: "horizontal",
-        //   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-
-        // }}
-        // headerMode="float"
-        // animation="fade"
       >
         <Stack.Screen
+          name="Home" component={HomeTabNavigator}
           options={({ route }) => ({
-            title: getHeaderTitle(route),
-            headerShown: isHeaderShown(route)
-          })} 
-          name="Home" component={HomeTabNavigator} />
+            // title: getHeaderTitle(route),
+            headerShown: false
+          })} />
         {/* <Stack.Screen name="Settings" component={SettingsScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>

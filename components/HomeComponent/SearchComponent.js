@@ -22,8 +22,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 export default Search = () => {
     return (
         <View style={styles.container}>
-            <View style={styles.searchView}>
-                <View style={styles.searchIcon}><Icon name="search" size={27} color="#fff" /></View>
+            <View style={[styles.searchView]}>
+                <View style={styles.searchIcon}><Icon name="search" size={27} color="black" /></View>
                 <TextInput style={styles.searchInput}
                     placeholder="Search"></TextInput>
             </View>
@@ -44,18 +44,20 @@ export default Search = () => {
 }
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 20,
+        paddingHorizontal: 20,
     },
     scrollView: {
         backgroundColor: Colors.lighter,
     },
     searchView: {
-        backgroundColor: "#ff9933",
+        // backgroundColor: "#ff9933",
         borderRadius: 20,
         flexDirection: "row",
         paddingHorizontal: 10,
         marginTop: 10,
+        borderWidth: 1
     },
+
     searchIcon: {
         // backgroundColor:'#ddd',
         justifyContent: 'center',
