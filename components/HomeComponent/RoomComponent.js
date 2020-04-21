@@ -25,7 +25,6 @@ import FontAwesome5ICon from 'react-native-vector-icons/FontAwesome5';
 export default Room = ({plusFontSize}) => {
     const DOLLAR_SIGN = '\u0024';
     plusFontSize = plusFontSize == undefined ? 0 : plusFontSize;
-    console.log(plusFontSize);
     return (
         <View style={{ backgroundColor: 'white', flex: 1 }}>
             <View style={{ flex: 1 }}>

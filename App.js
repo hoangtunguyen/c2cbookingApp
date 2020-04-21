@@ -19,7 +19,7 @@ const HomeStack = createStackNavigator();
 const HomeStackNavigator = ({navigation, route}) =>{
   if(route.state){
     navigation.setOptions({
-      tabBarVisible: route.state.index > 0 ? false : true
+      tabBarVisible: route.state.index > 1 ? false : true
     })
   }
   
