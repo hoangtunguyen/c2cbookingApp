@@ -12,15 +12,40 @@ import VoiceScreen from "./screens/VoiceScreen";
 import FavoriteScreen from "./screens/FavoriteScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
+import ShowAllRoomsScreen from "./screens/ShowAllRoomsScreen";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
+const HomeStackNavigator = ({navigation, route}) =>{
+  if(route.state){
+    navigation.setOptions({
+      tabBarVisible: route.state.index > 0 ? false : true
+    })
+  }
+  
+  return(
+    <HomeStack.Navigator
+    initialRouteName="Home"
+    screenOptions={{
+      gestureEnabled: true,
+      gestureDirection: "horizontal",
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      headerShown: false,
+    }}
+    // headerMode="float"
+    animation="fade"
+    >
+      <HomeStack.Screen name="Home" component={HomeScreen}/>
+      <HomeStack.Screen name="ShowAllRooms" component={ShowAllRoomsScreen}/>
+    </HomeStack.Navigator>
+  );
 
+}
 const HomeTabNavigator = ({ navigation, route }) => {
   return (
     <Tab.Navigator
       
-      initialRouteName="Home"
+      initialRouteName="HomeStack"
       activeColor = "#adc"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
@@ -40,7 +65,7 @@ const HomeTabNavigator = ({ navigation, route }) => {
         }
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Home" component={HomeStackNavigator} />
       <Tab.Screen name="QR" component={QRScreen} />
       <Tab.Screen
         // options={{

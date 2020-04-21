@@ -4,7 +4,7 @@ import Search from "../components/HomeComponent/SearchComponent";
 import Category from "../components/HomeComponent/CategotyComponent";
 import Room from "../components/HomeComponent/RoomComponent";
 
-export default HomeScreen = () => {
+export default HomeScreen = ({ navigation }) => {
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ flex: 1 }}>
@@ -36,12 +36,23 @@ export default HomeScreen = () => {
                         <ScrollView
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
+                            style={{paddingLeft: 20}}
                         >
-                            <Room />
-                            <Room />
-                            <Room />
+                            <View style={{width: 230, height: 240, backgroundColor: 'red', marginRight: 15}}>
+                                <Room />
+                            </View>
+                            <View style={{width: 230, height: 240, backgroundColor: 'red', marginRight: 15}}>
+                                <Room />
+                            </View>
+                            <View style={{width: 230, height: 240, backgroundColor: 'red', marginRight: 15}}>
+                                <Room />
+                            </View>
+                            {/* <Room />
+                            <Room /> */}
                         </ScrollView>
-                        <TouchableOpacity style={{ backgroundColor: "#80b3ff", borderRadius: 3, width: 330, marginLeft: 20, paddingVertical: 10, alignItems: 'center', marginVertical: 15}}>
+                        <TouchableOpacity style={{ backgroundColor: "#80b3ff", borderRadius: 3, width: 330, marginLeft: 20, paddingVertical: 10, alignItems: 'center', marginVertical: 15 }}
+                            onPress={() => navigation.navigate("ShowAllRooms")}
+                        >
                             <Text style={{ fontSize: 16, fontWeight: "700", textTransform: "uppercase" }}>Show All Stays</Text>
                         </TouchableOpacity>
                     </View>

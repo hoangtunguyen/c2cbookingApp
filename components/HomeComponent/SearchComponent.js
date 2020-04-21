@@ -45,6 +45,7 @@ export default Search = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 20,
+        marginBottom: 10
     },
     scrollView: {
         backgroundColor: Colors.lighter,
