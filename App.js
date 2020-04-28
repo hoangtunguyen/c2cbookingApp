@@ -13,16 +13,21 @@ import FavoriteScreen from "./screens/FavoriteScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
 import ShowAllRoomsScreen from "./screens/ShowAllRoomsScreen";
+import DetailRoomScreen from "./screens/DetailRoomScreen";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 const HomeStackNavigator = ({navigation, route}) =>{
+  const routeName = route.state ?
+  route.state.routes[route.state.index].name: 'Home';
+
   if(route.state){
     navigation.setOptions({
-      tabBarVisible: route.state.index > 1 ? false : true
+
+      // tabBarVisible: route.state.index > 1 ? false : true
+       tabBarVisible: routeName === "DetailRoom" ? false : true
     })
   }
-  
   return(
     <HomeStack.Navigator
     initialRouteName="Home"
@@ -37,6 +42,11 @@ const HomeStackNavigator = ({navigation, route}) =>{
     >
       <HomeStack.Screen name="Home" component={HomeScreen}/>
       <HomeStack.Screen name="ShowAllRooms" component={ShowAllRoomsScreen}/>
+      <HomeStack.Screen name="DetailRoom" component={DetailRoomScreen}
+      options={
+        {tabBarVisible: false}
+      }/>
+
     </HomeStack.Navigator>
   );
 

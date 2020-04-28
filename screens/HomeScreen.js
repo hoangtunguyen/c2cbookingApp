@@ -38,9 +38,10 @@ export default HomeScreen = ({ navigation }) => {
                             showsHorizontalScrollIndicator={false}
                             style={{paddingLeft: 20}}
                         >
-                            <View style={{width: 230, height: 240, backgroundColor: 'red', marginRight: 15}}>
+                            <TouchableOpacity style={{width: 230, height: 240, backgroundColor: 'red', marginRight: 15}}
+                                onPress={()=> navigation.navigate('DetailRoom')}>
                                 <Room />
-                            </View>
+                            </TouchableOpacity>
                             <View style={{width: 230, height: 240, backgroundColor: 'red', marginRight: 15}}>
                                 <Room />
                             </View>
