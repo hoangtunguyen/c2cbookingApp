@@ -14,38 +14,45 @@ import ProfileScreen from "./screens/ProfileScreen";
 
 import ShowAllRoomsScreen from "./screens/ShowAllRoomsScreen";
 import DetailRoomScreen from "./screens/DetailRoomScreen";
+import CalendarScreen from "./screens/CalendarScreen";
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
-const HomeStackNavigator = ({navigation, route}) =>{
+const HomeStackNavigator = ({ navigation, route }) => {
   const routeName = route.state ?
-  route.state.routes[route.state.index].name: 'Home';
+    route.state.routes[route.state.index].name : 'Home';
 
-  if(route.state){
+  if (route.state) {
     navigation.setOptions({
 
       // tabBarVisible: route.state.index > 1 ? false : true
-       tabBarVisible: routeName === "DetailRoom" ? false : true
+      tabBarVisible: routeName === "DetailRoom" || routeName === "Calendar"  ? false : true
     })
   }
-  return(
+  return (
     <HomeStack.Navigator
-    initialRouteName="Home"
-    screenOptions={{
-      gestureEnabled: true,
-      gestureDirection: "horizontal",
-      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-      headerShown: false,
-    }}
-    // headerMode="float"
-    animation="fade"
+      initialRouteName="Home"
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: "horizontal",
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerShown: false,
+      }}
+      // headerMode="float"
+      animation="fade"
     >
-      <HomeStack.Screen name="Home" component={HomeScreen}/>
-      <HomeStack.Screen name="ShowAllRooms" component={ShowAllRoomsScreen}/>
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="ShowAllRooms" component={ShowAllRoomsScreen} />
       <HomeStack.Screen name="DetailRoom" component={DetailRoomScreen}
-      options={
-        {tabBarVisible: false}
-      }/>
+        options={
+          { tabBarVisible: false }
+        } />
+      <HomeStack.Screen name="Calendar" component={CalendarScreen}
+        options={
+          { tabBarVisible: false }
+        } />
+
 
     </HomeStack.Navigator>
   );
@@ -54,16 +61,16 @@ const HomeStackNavigator = ({navigation, route}) =>{
 const HomeTabNavigator = ({ navigation, route }) => {
   return (
     <Tab.Navigator
-      
+
       initialRouteName="HomeStack"
-      activeColor = "#adc"
+      activeColor="#adc"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
           if (route.name == "Home") {
             iconName = "home";
           } else if (route.name == "QR") {
-            iconName = "qrcode";  
+            iconName = "qrcode";
           } else if (route.name == "Voice") {
             iconName = "microphone";
           } else if (route.name == "Favorite") {
