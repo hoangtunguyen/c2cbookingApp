@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import Moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -10,7 +10,7 @@ export default CalendarScreen = ({ navigation }) => {
     const [endDate, setEndDate] = useState(null);
     const [listDate, setListDate] = useState(null);
     const DOLLAR_SIGN = '\u0024';
-
+    const MILISECONDS_PER_DAY = 86400000;
     // console.log(Moment(startDate).format('YYYY-MM-DD'));
 
     useEffect(() => {
@@ -20,12 +20,12 @@ export default CalendarScreen = ({ navigation }) => {
             obj["" + startDate] = { startingDay: true, color: 'green', textColor: 'white' };
         }
         if (endDate != null) {
-            let temp = Moment(new Date(new Date(startDate).getTime() + 86400000)).format('YYYY-MM-DD');
+            let temp = Moment(new Date(new Date(startDate).getTime() + MILISECONDS_PER_DAY)).format('YYYY-MM-DD');
             while (new Date(endDate) - new Date(temp) > 0) {
                 obj["" + temp] = { color: 'green', textColor: 'white' };
-                console.log(temp);
+                // console.log(temp);
 
-                temp = Moment(new Date(new Date(temp).getTime() + 86400000)).format('YYYY-MM-DD');
+                temp = Moment(new Date(new Date(temp).getTime() + MILISECONDS_PER_DAY)).format('YYYY-MM-DD');
             }
             obj["" + endDate] = { endingDay: true, color: 'green', textColor: 'white' };
         }
@@ -59,6 +59,17 @@ export default CalendarScreen = ({ navigation }) => {
         setStartDate(null);
         setEndDate(null);
     }
+    function countDays(start, finish) {
+        if (start == null || finish == null) return 0;
+        let duration = new Date(finish) - new Date(start);
+        return (duration / MILISECONDS_PER_DAY) + 1;
+    };
+    function isDisableButton() {
+        if (startDate == null || endDate == null) {
+            return true;
+        }
+        return false;
+    }
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ height: 120, backgroundColor: 'white', paddingHorizontal: 20 }}>
@@ -73,10 +84,17 @@ export default CalendarScreen = ({ navigation }) => {
                         <Text style={{ fontSize: 16, fontWeight: "400", }}>Clear</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={{ marginTop: 10 }}>
-                    <Text style={{ fontSize: 22, fontWeight: '700' }}>Select Dates</Text>
-                    <Text>Add your travel dates for exact pricing</Text>
-                </View>
+                {startDate == null ?
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={{ fontSize: 22, fontWeight: '700' }}>Select Dates</Text>
+                        <Text>Add your travel dates for exact pricing</Text>
+                    </View>
+                    :
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={{ fontSize: 24, fontWeight: '700' }}>{countDays(startDate, endDate)} {countDays(startDate, endDate) > 1 ? "nights" : "night"}</Text>
+                    </View>
+                }
+
             </View>
             <View style={{ flex: 1 }}>
                 <CalendarList
@@ -121,11 +139,26 @@ export default CalendarScreen = ({ navigation }) => {
                         <Text style={{ fontSize: 20 }}> 210 $ in total </Text>
                     </View>
                 </View>
-                <TouchableOpacity style={{ backgroundColor: "#80b3ff", borderRadius: 5, paddingHorizontal: 15, paddingVertical: 5 }}
+                <TouchableOpacity style={isDisableButton() ? styles.disabledButton : styles.activeButton}
+                    disabled={isDisableButton()}
                 >
-                    <Text style={{ fontSize: 22, fontWeight: "400", }}>Next</Text>
+                    <Text style={{ fontSize: 22, fontWeight: "400", color: isDisableButton() ? 'white' : 'black' }}>Next</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 }
+const styles = StyleSheet.create({
+    disabledButton: {
+        backgroundColor: '#cccccc',
+        borderRadius: 5,
+        paddingHorizontal: 15,
+        paddingVertical: 5,
+    },
+    activeButton: {
+        backgroundColor: "#80b3ff",
+        borderRadius: 5,
+        paddingHorizontal: 15,
+        paddingVertical: 5
+    }
+})
