@@ -140,7 +140,7 @@ export default CalendarScreen = ({ navigation }) => {
                     </View>
                 </View>
                 <TouchableOpacity style={isDisableButton() ? styles.disabledButton : styles.activeButton}
-                    disabled={isDisableButton()}
+                    disabled={isDisableButton()} onPress={()=> navigation.navigate('Payment')}
                 >
                     <Text style={{ fontSize: 22, fontWeight: "400", color: isDisableButton() ? 'white' : 'black' }}>Next</Text>
                 </TouchableOpacity>

@@ -15,7 +15,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import ShowAllRoomsScreen from "./screens/ShowAllRoomsScreen";
 import DetailRoomScreen from "./screens/DetailRoomScreen";
 import CalendarScreen from "./screens/CalendarScreen";
-
+import PaymentScreen from "./screens/PaymentScreen";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -27,7 +27,7 @@ const HomeStackNavigator = ({ navigation, route }) => {
     navigation.setOptions({
 
       // tabBarVisible: route.state.index > 1 ? false : true
-      tabBarVisible: routeName === "DetailRoom" || routeName === "Calendar"  ? false : true
+      tabBarVisible: routeName === "DetailRoom" || routeName === "Calendar" || routeName == "Payment" ? false : true
     })
   }
   return (
@@ -52,6 +52,7 @@ const HomeStackNavigator = ({ navigation, route }) => {
         options={
           { tabBarVisible: false }
         } />
+      <HomeStack.Screen name="Payment" component={PaymentScreen} />
 
 
     </HomeStack.Navigator>
