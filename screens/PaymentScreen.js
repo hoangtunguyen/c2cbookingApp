@@ -1,9 +1,18 @@
-import * as React from 'react';
-import { View, Text, TouchableOpacity, Dimensions, Image, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TouchableOpacity, Dimensions, Image, StyleSheet, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { WebView } from 'react-native-webview';
+
 export default PaymentScreen = ({ navigation }) => {
     const screenWidth = Math.round(Dimensions.get('window').width);
+    const [isShowModal, setIsShowModal] = useState(false);
 
+    function handleCheckoutData(data){
+        if(data.title == "success"){
+            setIsShowModal(false);
+            
+        }
+    }
     return (
         <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 20, paddingTop: 0, alignItems: 'center' }}>
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingVertical: 10, alignItems: 'flex-end' }}>
@@ -62,11 +71,21 @@ export default PaymentScreen = ({ navigation }) => {
                     <Text style={{ fontSize: 22 }}>218 $</Text>
                 </View>
                 <View style={{ backgroundColor: 'white', paddingVertical: 15, borderTopWidth: 0.5, alignItems: 'center' }}>
-                    <TouchableOpacity style={{ borderRadius: 10, height: 50, width: 300, backgroundColor: '#ff471a', justifyContent: 'center', alignItems: 'center' }}>
+                    <TouchableOpacity style={{ borderRadius: 10, height: 50, width: 300, backgroundColor: '#ff471a', justifyContent: 'center', alignItems: 'center' }}
+                    onPress={() =>setIsShowModal(true)}>
                         <Text style={{ color: 'white', fontWeight: '700', fontSize: 16 }}>Reserve</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+            <Modal
+            visible={isShowModal}
+            onRequestClose={() => setIsShowModal(false)}
+            >
+                <WebView source={{ uri: 'http://192.168.1.6:8080/home' }}
+                onNavigationStateChange={(data) => handleCheckoutData(data)}
+                injectedJavaScript={`document.checkoutForm.submit()`}/>
+            </Modal>
+            
         </View>
     );
 }
