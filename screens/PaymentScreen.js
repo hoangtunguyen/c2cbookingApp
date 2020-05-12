@@ -81,7 +81,7 @@ export default PaymentScreen = ({ navigation }) => {
             visible={isShowModal}
             onRequestClose={() => setIsShowModal(false)}
             >
-                <WebView source={{ uri: 'http://192.168.1.6:8080/home' }}
+                <WebView source={{ uri: 'http://192.168.1.5:8080/home' }}
                 onNavigationStateChange={(data) => handleCheckoutData(data)}
                 injectedJavaScript={`document.checkoutForm.submit()`}/>
             </Modal>

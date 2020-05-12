@@ -1,11 +1,15 @@
-import * as React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Button, Dimensions, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Button, Dimensions, StyleSheet, Modal } from 'react-native';
 import Search from "../components/HomeComponent/SearchComponent";
 import RoomComponent from '../components/HomeComponent/RoomComponent';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import WholeMapComponent from "../components/OtherComponent/WholeMapComponent";
 
-export default ShowAllRoomsScreen = () => {
+export default ShowAllRoomsScreen = ({navigation}) => {
     const screenWidth = Math.round(Dimensions.get('window').width);
+    const [isShowModal, setIsShowModal] = useState(false);
+
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ flex: 1 }}>
@@ -25,9 +29,15 @@ export default ShowAllRoomsScreen = () => {
                     </View>
                 </ScrollView>
             </View>
-            <TouchableOpacity style={styles.mapView}>
+            <TouchableOpacity style={styles.mapView} onPress={() => setIsShowModal(true)}>
                 <Icon name="map-marker" size={30} color="black" />
             </TouchableOpacity>
+            <Modal
+                visible={isShowModal}
+                onRequestClose={() => setIsShowModal(false)}
+            >
+                <WholeMapComponent navigation={navigation} setIsShowModal={setIsShowModal} />
+            </Modal>
         </View>
     );
 }
@@ -51,7 +61,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.43,
         shadowRadius: 9.51,
-        
+
         elevation: 15,
-    }
+    },
+
 })

@@ -68,9 +68,9 @@ export default DetailRoomScreen = ({ navigation }) => {
                         <View style={{ flex: 1 }}>
                             <Text style={{ fontSize: 22, fontWeight: '700' }}>Amenities</Text>
                             <View style={{ backgroundColor: 'white', flexDirection: 'column', flexWrap: 'wrap', marginTop: 10 }}>
-                                {dataAmentities.map(data => {
+                                {dataAmentities.map((data, index) => {
                                     return (
-                                        <AmenitiesComponent data={data} />
+                                        <AmenitiesComponent key={index} data={data} />
                                     );
                                 })}
                             </View>
