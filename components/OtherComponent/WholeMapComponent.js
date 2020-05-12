@@ -8,6 +8,15 @@ import Carousel from 'react-native-snap-carousel';
 import CarouselComponent from "../OtherComponent/CarouselComponent";
 export default ({ navigation, setIsShowModal }) => {
     const image = { uri: "https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg" };
+    const [coordinate, setCoordinate] = useState([
+        { title: "Louis bdl, full house in down town", latitude: 37.79045, longitude: -122.4324, description: "30$/ Night", image: 'https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg' },
+        { title: "Havana beautiful home", latitude: 37.78245, longitude: -122.4324, description: "20$/ Night", image: 'https://pix6.agoda.net/hotelImages/4656079/-1/f7771c6afc7cc32401286116a7eed6f0.jpg' },
+        { title: "Happy Home", latitude: 37.78245, longitude: -122.4344, description: "35$/ Night", image: 'https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg' },
+
+    ]);
+    const [carousel, setCarousel] = useState(null);
+    const [map, setMap] = useState(null);
+    var markerArr = [];
     const _renderItem = ({ item, index }) => {
         return (
             <TouchableOpacity style={{
@@ -27,7 +36,7 @@ export default ({ navigation, setIsShowModal }) => {
                 <View style={{ flex: 5, justifyContent: 'center', paddingLeft: 10 }}>
                     <Text style={{ fontSize: 18, }}>{item.title}</Text>
                     <Text style={{ fontSize: 18, fontWeight: '700', marginTop: 10 }}>{item.description}</Text>
-                    <View style={{ flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', marginTop: 10}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
                         <Icon name="star" size={20} color="red" />
                         <Text style={{ fontSize: 18 }}> 4.9 (102)</Text>
                     </View>
@@ -35,15 +44,28 @@ export default ({ navigation, setIsShowModal }) => {
             </TouchableOpacity>
         )
     }
-    const [coordinate, setCoordinate] = useState([
-        { title: "Louis bdl, full house in down town", latitude: 37.79045, longitude: -122.4324, description: "30$/ Night", image: 'https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg' },
-        { title: "Havana beautiful home", latitude: 37.78245, longitude: -122.4324, description: "20$/ Night", image: 'https://pix6.agoda.net/hotelImages/4656079/-1/f7771c6afc7cc32401286116a7eed6f0.jpg' },
-        { title: "Happy Home", latitude: 37.78245, longitude: -122.4344, description: "35$/ Night", image: 'https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg' },
+    const _onCarouselItemChange = (index) =>{
+        let location = coordinate[index];
+        map.animateToRegion({
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.09,
+            longitudeDelta: 0.035
+          });
+        markerArr[index].showCallout();
+    }
 
-    ]);
-    const [carousel, setCarousel] = useState(null);
     const onMarkerPressed = (data, index) => {
         carousel.snapToItem(index);
+    };
+    const updateRefMarker = (ref, index) =>{
+        // setMarker([
+        //     ...marker,
+        //     ref
+        // ])
+        // // console.log(ma);
+        markerArr[index] = ref;
+        // console.log(markerArr);
     }
     return (
         <View style={styles.container}>
@@ -54,6 +76,7 @@ export default ({ navigation, setIsShowModal }) => {
             <MapView
                 provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 style={styles.map}
+                ref={map => setMap(map)}
                 region={{
                     latitude: 37.78825,
                     longitude: -122.4324,
@@ -67,6 +90,7 @@ export default ({ navigation, setIsShowModal }) => {
                         return (
                             <MapView.Marker
                                 key={index}
+                                ref={ref => updateRefMarker(ref, index)}
                                 coordinate={{
                                     latitude: marker.latitude,
                                     longitude: marker.longitude
@@ -89,6 +113,7 @@ export default ({ navigation, setIsShowModal }) => {
                     renderItem={_renderItem}
                     sliderWidth={Dimensions.get('window').width}
                     itemWidth={350}
+                    onSnapToItem={(index) => _onCarouselItemChange(index)}
                 />
             </View>
 
