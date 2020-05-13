@@ -11,6 +11,7 @@ import QRScreen from "./screens/QRScreen";
 import VoiceScreen from "./screens/VoiceScreen";
 import FavoriteScreen from "./screens/FavoriteScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
 
 import ShowAllRoomsScreen from "./screens/ShowAllRoomsScreen";
 import DetailRoomScreen from "./screens/DetailRoomScreen";
@@ -115,6 +116,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
       >
+        <Stack.Screen
+          name="Welcome" component={WelcomeScreen}
+          options={({ route }) => ({
+            // title: getHeaderTitle(route),
+            headerShown: false
+          })} />
         <Stack.Screen
           name="Home" component={HomeTabNavigator}
           options={({ route }) => ({

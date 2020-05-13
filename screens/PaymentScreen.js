@@ -1,18 +1,35 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, TouchableOpacity, Dimensions, Image, StyleSheet, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { WebView } from 'react-native-webview';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default PaymentScreen = ({ navigation }) => {
     const screenWidth = Math.round(Dimensions.get('window').width);
     const [isShowModal, setIsShowModal] = useState(false);
-
+    const [ipServer, setIpServer] = useState(null);
+    const getData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('IP_SERVER')
+          if(value !== null) {
+            // value previously stored
+            setIpServer(value);
+            console.log(value);
+          }
+        } catch(e) {
+          // error reading value
+        }
+      }
     function handleCheckoutData(data){
         if(data.title == "success"){
             setIsShowModal(false);
             
         }
-    }
+    };
+    useEffect(() => {
+        getData();
+        console.log("didmount");
+      }, [])
     return (
         <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 20, paddingTop: 0, alignItems: 'center' }}>
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingVertical: 10, alignItems: 'flex-end' }}>
@@ -81,7 +98,7 @@ export default PaymentScreen = ({ navigation }) => {
             visible={isShowModal}
             onRequestClose={() => setIsShowModal(false)}
             >
-                <WebView source={{ uri: 'http://192.168.1.7:8080/home' }}
+                <WebView source={{ uri: 'http://'+ipServer+':8080/home' }}
                 onNavigationStateChange={(data) => handleCheckoutData(data)}
                 injectedJavaScript={`document.checkoutForm.submit()`}/>
             </Modal>
