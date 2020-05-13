@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Carousel from 'react-native-snap-carousel';
 import CarouselComponent from "../OtherComponent/CarouselComponent";
-export default ({ navigation, setIsShowModal }) => {
+export default ({ navigation }) => {
     const image = { uri: "https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg" };
     const [coordinate, setCoordinate] = useState([
         { title: "Louis bdl, full house in down town", latitude: 37.79045, longitude: -122.4324, description: "30$/ Night", image: 'https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg' },
@@ -25,9 +25,11 @@ export default ({ navigation, setIsShowModal }) => {
                 borderRadius: 20,
                 height: '100%',
                 paddingHorizontal: 0,
-
-
-            }}>
+            }}
+            onPress={()=> {
+                navigation.navigate('DetailRoom');
+            }}
+            >
 
                 <View style={{ flex: 3 }}>
                     <Image source={{ uri: item.image }}
@@ -59,17 +61,11 @@ export default ({ navigation, setIsShowModal }) => {
         carousel.snapToItem(index);
     };
     const updateRefMarker = (ref, index) =>{
-        // setMarker([
-        //     ...marker,
-        //     ref
-        // ])
-        // // console.log(ma);
         markerArr[index] = ref;
-        // console.log(markerArr);
     }
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={modalStyles.close_bg} onPress={() => setIsShowModal(false)}>
+            <TouchableOpacity style={modalStyles.close_bg}>
                 <EvilIcons name="close" size={40} color="black" />
             </TouchableOpacity>
 

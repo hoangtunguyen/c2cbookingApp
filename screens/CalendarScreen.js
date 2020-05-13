@@ -136,7 +136,7 @@ export default CalendarScreen = ({ navigation }) => {
                         <Text style={{ fontSize: 18 }}> /night</Text>
                     </View>
                     <View>
-                        <Text style={{ fontSize: 20 }}> 210 $ in total </Text>
+                        <Text style={{ fontSize: 20 }}>$210 in total </Text>
                     </View>
                 </View>
                 <TouchableOpacity style={isDisableButton() ? styles.disabledButton : styles.activeButton}

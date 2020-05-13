@@ -8,7 +8,7 @@ import WholeMapComponent from "../components/OtherComponent/WholeMapComponent";
 
 export default ShowAllRoomsScreen = ({navigation}) => {
     const screenWidth = Math.round(Dimensions.get('window').width);
-    const [isShowModal, setIsShowModal] = useState(false);
+    // const [isShowModal, setIsShowModal] = useState(false);
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -18,9 +18,11 @@ export default ShowAllRoomsScreen = ({navigation}) => {
                     <View style={{ marginLeft: 20, marginBottom: 10 }}>
                         <Text style={{ fontSize: 22, fontWeight: '700' }}>Show more 100+ stays</Text>
                     </View>
-                    <View style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}>
+                    <TouchableOpacity style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}
+                    onPress={()=> navigation.navigate('DetailRoom')}
+                    >
                         <RoomComponent plusFontSize={3} />
-                    </View>
+                    </TouchableOpacity>
                     <View style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}>
                         <RoomComponent plusFontSize={3} />
                     </View>
@@ -29,15 +31,15 @@ export default ShowAllRoomsScreen = ({navigation}) => {
                     </View>
                 </ScrollView>
             </View>
-            <TouchableOpacity style={styles.mapView} onPress={() => setIsShowModal(true)}>
+            <TouchableOpacity style={styles.mapView} onPress={() => navigation.navigate('WholeMap')}>
                 <Icon name="map-marker" size={30} color="black" />
             </TouchableOpacity>
-            <Modal
+            {/* <Modal
                 visible={isShowModal}
                 onRequestClose={() => setIsShowModal(false)}
             >
                 <WholeMapComponent navigation={navigation} setIsShowModal={setIsShowModal} />
-            </Modal>
+            </Modal> */}
         </View>
     );
 }
