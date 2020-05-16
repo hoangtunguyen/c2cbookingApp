@@ -38,6 +38,11 @@ export default Search = () => {
                 >
                     <Text style={styles.searchMoreText}>Guest</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                >
+                    <Text style={styles.searchMoreText}>Filters</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );

@@ -29,7 +29,7 @@ export default Room = ({ plusFontSize }) => {
         <View style={{ backgroundColor: 'white', flex: 1 }}>
             <View style={{ flex: 1 }}>
                 <Image source={{ uri: 'https://pix6.agoda.net/hotelImages/4656079/-1/f7771c6afc7cc32401286116a7eed6f0.jpg' }}
-                    style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }} />
+                    style={{ flex: 1, width: null, height: null, resizeMode: 'cover', borderRadius: 10 }} />
                 <TouchableOpacity style={{position: 'absolute', right: 10, top : 10}}>
                     <Icon name="gratipay" size={30 + plusFontSize * 4} color="white" />
                 </TouchableOpacity>
