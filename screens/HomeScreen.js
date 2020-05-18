@@ -1,10 +1,25 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Button } from 'react-native';
 import Search from "../components/HomeComponent/SearchComponent";
 import Category from "../components/HomeComponent/CategotyComponent";
 import Room from "../components/HomeComponent/RoomComponent";
-
+import { baseURL } from "../util/Util";
 export default HomeScreen = ({ navigation }) => {
+    const [favoriteRoomsData, setFavoriteRoomsData] = useState(null);
+    async function getFavoriteRooms() {
+        try {
+            const response = await fetch(baseURL+'/room/favorite/5');
+            const data = await response.json();
+            setFavoriteRoomsData(data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        getFavoriteRooms();
+    }, []);
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ flex: 1 }}>
@@ -36,20 +51,22 @@ export default HomeScreen = ({ navigation }) => {
                         <ScrollView
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
-                            style={{paddingLeft: 20}}
+                            style={{ paddingLeft: 20, marginRight: 10 }}
                         >
-                            <TouchableOpacity style={{width: 230, height: 240, backgroundColor: 'red', marginRight: 15}}
-                                onPress={()=> navigation.navigate('DetailRoom')}>
-                                <Room />
-                            </TouchableOpacity>
-                            <View style={{width: 230, height: 240, backgroundColor: 'red', marginRight: 15}}>
-                                <Room />
-                            </View>
-                            <View style={{width: 230, height: 240, backgroundColor: 'red', marginRight: 15}}>
-                                <Room />
-                            </View>
-                            {/* <Room />
-                            <Room /> */}
+                            {
+                                favoriteRoomsData != null && favoriteRoomsData.map((data, index) => {
+                                    return (
+                                        <TouchableOpacity style={{ width: 230, height: 240, backgroundColor: 'red', marginRight: 15 }}
+                                            key={index}
+                                            onPress={() => navigation.navigate('DetailRoom', {idRoom : data.id})}>
+                                            <Room data={data}/>
+                                        </TouchableOpacity>
+                                    );
+                                })
+                            }
+
+
+
                         </ScrollView>
                         <TouchableOpacity style={{ backgroundColor: "#80b3ff", borderRadius: 3, width: 330, marginLeft: 20, paddingVertical: 10, alignItems: 'center', marginVertical: 15 }}
                             onPress={() => navigation.navigate("ShowAllRooms")}

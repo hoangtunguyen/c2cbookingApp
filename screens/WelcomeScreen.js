@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 export default WelcomeScreen = ({navigation}) => {
     const [ipServer, setIpServer] = useState('192.168.1.7');
 
-
     const storeData = async () => {
         try {
           await AsyncStorage.setItem('IP_SERVER', ipServer);

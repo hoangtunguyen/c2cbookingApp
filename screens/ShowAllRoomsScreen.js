@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Button, Dimensions, StyleSheet, Modal } from 'react-native';
 import Search from "../components/HomeComponent/SearchComponent";
 import RoomComponent from '../components/HomeComponent/RoomComponent';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import WholeMapComponent from "../components/OtherComponent/WholeMapComponent";
+import { baseURL } from "../util/Util";
 
 export default ShowAllRoomsScreen = ({navigation}) => {
     const screenWidth = Math.round(Dimensions.get('window').width);
-    // const [isShowModal, setIsShowModal] = useState(false);
-
+    const [allRoomData, setAllRoomData] = useState(null);
+    async function getAllRooms() {
+        try {
+            const response = await fetch(baseURL + '/room/viewAll');
+            const data = await response.json();
+            setAllRoomData(data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+    useEffect(() => {
+        getAllRooms();
+    }, []);
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ flex: 1 }}>
@@ -18,17 +31,18 @@ export default ShowAllRoomsScreen = ({navigation}) => {
                     <View style={{ marginLeft: 20, marginBottom: 10 }}>
                         <Text style={{ fontSize: 22, fontWeight: '700' }}>Show more 100+ stays</Text>
                     </View>
-                    <TouchableOpacity style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}
-                    onPress={()=> navigation.navigate('DetailRoom')}
-                    >
-                        <RoomComponent plusFontSize={3} />
-                    </TouchableOpacity>
-                    <View style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}>
-                        <RoomComponent plusFontSize={3} />
-                    </View>
-                    <View style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}>
-                        <RoomComponent plusFontSize={3} />
-                    </View>
+                    {
+                        allRoomData != null && allRoomData.map((data, index) =>{
+                            return(
+                                <TouchableOpacity style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}
+                                key={index}
+                                onPress={()=> navigation.navigate('DetailRoom', {idRoom : data.id})}
+                                >
+                                    <RoomComponent plusFontSize={3} data={data} />
+                                </TouchableOpacity>
+                            );
+                        })
+                    }
                 </ScrollView>
             </View>
             <TouchableOpacity style={styles.mapView} onPress={() => navigation.navigate('WholeMap')}>

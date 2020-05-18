@@ -11,7 +11,7 @@ export default AmenitiesComponent = ({ data }) => {
                 <Text style={{ fontSize: 18 }}>{data['name']}</Text>
             </View>
             <View style={{ flex: 1, flexDirection: 'row-reverse'}}>
-                <Image source={{uri: data.url} }
+                <Image source={{uri: data.iconUrl} }
                     style={{ width: 35, height: 35, marginRight: 20 }} />
             </View>
         </View>

@@ -3,16 +3,24 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import Moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { countDays, calTotalPrice } from "../util/Util";
 
-
-export default CalendarScreen = ({ navigation }) => {
+export default CalendarScreen = ({ navigation, route }) => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [listDate, setListDate] = useState(null);
     const DOLLAR_SIGN = '\u0024';
     const MILISECONDS_PER_DAY = 86400000;
+    const data = route.params["data"];
+    const [totalPrice, setTotalPrice] = useState(calTotalPrice({
+        price: data.price,
+        countDays: 1,
+        serviceFee: data.serviceFee,
+        minGuests: data.minGuestCount,
+        guests: data.minGuestCount,
+        increasingPrice: data.increasingPrice
+    }));
     // console.log(Moment(startDate).format('YYYY-MM-DD'));
-
     useEffect(() => {
         console.log(startDate + " | " + endDate);
         const obj = {};
@@ -32,6 +40,14 @@ export default CalendarScreen = ({ navigation }) => {
 
         setListDate(obj);
 
+        if (startDate != null) setTotalPrice(calTotalPrice({
+            price: data.price,
+            countDays: countDays(startDate, endDate),
+            serviceFee: data.serviceFee,
+            minGuests: data.minGuestCount,
+            guests: data.minGuestCount,
+            increasingPrice: data.increasingPrice
+        }));
     }, [startDate, endDate]);
 
     function press(date) {
@@ -59,11 +75,6 @@ export default CalendarScreen = ({ navigation }) => {
         setStartDate(null);
         setEndDate(null);
     }
-    function countDays(start, finish) {
-        if (start == null || finish == null) return 0;
-        let duration = new Date(finish) - new Date(start);
-        return (duration / MILISECONDS_PER_DAY) + 1;
-    };
     function isDisableButton() {
         if (startDate == null || endDate == null) {
             return true;
@@ -132,15 +143,15 @@ export default CalendarScreen = ({ navigation }) => {
             <View style={{ flexDirection: 'row', borderWidth: 0.4, height: 60, backgroundColor: 'white', alignItems: "center", justifyContent: 'space-between', paddingHorizontal: 15 }}>
                 <View>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 18, fontWeight: '700' }}>{DOLLAR_SIGN}10</Text>
+                        <Text style={{ fontSize: 18, fontWeight: '700' }}>{DOLLAR_SIGN}{data.price}</Text>
                         <Text style={{ fontSize: 18 }}> /night</Text>
                     </View>
                     <View>
-                        <Text style={{ fontSize: 20 }}>$210 in total </Text>
+                        <Text style={{ fontSize: 20 }}>${totalPrice} in total </Text>
                     </View>
                 </View>
                 <TouchableOpacity style={isDisableButton() ? styles.disabledButton : styles.activeButton}
-                    disabled={isDisableButton()} onPress={()=> navigation.navigate('Payment')}
+                    disabled={isDisableButton()} onPress={() => navigation.navigate('Payment', { data: { ...data, checkIn: startDate, checkOut: endDate } })}
                 >
                     <Text style={{ fontSize: 22, fontWeight: "400", color: isDisableButton() ? 'white' : 'black' }}>Next</Text>
                 </TouchableOpacity>

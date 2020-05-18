@@ -1,14 +1,14 @@
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import * as React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-export default () => (
+export default ({data}) => (
     <View style={styles.container}>
         <MapView
             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
             style={styles.map}
             region={{
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: data.lat - 0,
+                longitude: data.lng - 0,
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.0121,
             }}
@@ -16,11 +16,11 @@ export default () => (
 
             <MapView.Marker
                 coordinate={{
-                    latitude: 37.79245,
-                    longitude: -122.4324
+                    latitude: data.lat - 0,
+                    longitude: data.lng - 0
                 }}
-                title={"Louis bdl, full house in down town"}
-                description={"30$/ Night"}
+                title={data.name}
+                description={data.price+"$/ Night"}
             />
         </MapView>
     </View>

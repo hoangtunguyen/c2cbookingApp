@@ -5,41 +5,59 @@ import { WebView } from 'react-native-webview';
 import AsyncStorage from '@react-native-community/async-storage';
 import ModalRN from 'react-native-modal';
 import InputSpinner from "react-native-input-spinner";
+import Moment from 'moment';
+import { countDays, calTotalPrice } from "../util/Util";
+import { baseURL } from "../util/Util";
 
-export default PaymentScreen = ({ navigation }) => {
+export default PaymentScreen = ({ navigation, route }) => {
+    const data = route.params["data"];
+    const MILISECONDS_PER_DAY = 86400000;
     const [isModalVisible, setModalVisible] = useState(false);
-    const [guests, setGuest] = useState(2);
-    const maxGuest = 6;
-    const minGuest = 2;
+    const [guests, setGuest] = useState(data.minGuestCount);
+    const minGuest = data.minGuestCount;
+    const maxGuest = data.guestCount;
     const screenWidth = Math.round(Dimensions.get('window').width);
     const [isShowModal, setIsShowModal] = useState(false);
-    const [ipServer, setIpServer] = useState(null);
+    // const [ipServer, setIpServer] = useState(null);
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
     
-    const getData = async () => {
-        try {
-            const value = await AsyncStorage.getItem('IP_SERVER')
-            if (value !== null) {
-                // value previously stored
-                setIpServer(value);
-                console.log(value);
-            }
-        } catch (e) {
-            // error reading value
-        }
-    }
+    // const getData = async () => {
+    //     try {
+    //         const value = await AsyncStorage.getItem('IP_SERVER')
+    //         if (value !== null) {
+    //             // value previously stored
+    //             setIpServer(value);
+    //             console.log(value);
+    //         }
+    //     } catch (e) {
+    //         // error reading value
+    //     }
+    // }
     function handleCheckoutData(data) {
         if (data.title == "success") {
             setIsShowModal(false);
 
         }
     };
-    useEffect(() => {
-        getData();
-        console.log("didmount");
-    }, [])
+    // useEffect(() => {
+    //     getData();
+    // }, [])
+    const dataFormat = (date)=>{
+        let temp = Moment(new Date(new Date(date).getTime() + MILISECONDS_PER_DAY)).format('DD MMM');
+        return temp;
+    };
+    const totalPrice = () => {
+        return calTotalPrice({
+            price: data.price,
+            countDays: countDays(data.checkIn, data.checkOut),
+            serviceFee: data.serviceFee,
+            minGuests: data.minGuestCount,
+            guests: guests,
+            increasingPrice: data.increasingPrice
+        });
+    }
     return (
         <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 20, paddingTop: 0, alignItems: 'center' }}>
             <ModalRN isVisible={isModalVisible}>
@@ -85,26 +103,26 @@ export default PaymentScreen = ({ navigation }) => {
             <View style={{ width: screenWidth, paddingHorizontal: 20, }}>
                 <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingVertical: 15, borderTopWidth: 0.5 }}>
                     <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'space-evenly' }}>
-                        <Text style={{ fontWeight: '100', fontSize: 20, textTransform: 'uppercase' }}>Entire Flat</Text>
-                        <Text style={{ fontSize: 22, fontWeight: '700' }}>$12 / night</Text>
+                        <Text style={{ fontWeight: '100', fontSize: 20, textTransform: 'uppercase' }}>{data.categoryRoom}</Text>
+                        <Text style={{ fontSize: 22, fontWeight: '700' }}>${data.price} / night</Text>
                         <View style={{ flexDirection: "row", alignItems: 'center' }}>
                             <Icon name="star" size={18} color="#4d79ff" />
-                            <Text style={{ fontSize: 16, color: '#4d79ff' }}> 4.9 (143)</Text>
+                            <Text style={{ fontSize: 16, color: '#4d79ff' }}> {data.rating} ({data.votedCount})</Text>
                         </View>
                     </View>
                     <View style={{ flex: 1, height: 100, backgroundColor: 'white', alignItems: 'flex-end' }}>
-                        <Image source={{ uri: 'https://pix6.agoda.net/hotelImages/4656079/-1/f7771c6afc7cc32401286116a7eed6f0.jpg' }}
+                        <Image source={{ uri: data.urlImage }}
                             style={{ flex: 1, width: 150, height: null, resizeMode: 'cover' }} />
                     </View>
                 </View>
                 <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingVertical: 15, borderTopWidth: 0.5, justifyContent: 'space-between' }}>
                     <View style={{ alignItems: "center" }}>
                         <Text style={styles.titleDate}>Check-in</Text>
-                        <Text style={styles.titleDateData}>4 Jul</Text>
+                        <Text style={styles.titleDateData}>{dataFormat(data.checkIn)}</Text>
                     </View>
                     <View style={{ alignItems: "center" }}>
                         <Text style={styles.titleDate}>Check-out</Text>
-                        <Text style={styles.titleDateData}>14 Jul</Text>
+                        <Text style={styles.titleDateData}>{dataFormat(data.checkOut)}</Text>
                     </View>
                     <TouchableOpacity style={{ alignItems: "center" }} onPress={toggleModal}>
                         <Text style={styles.titleDate}>Guests</Text>
@@ -114,21 +132,17 @@ export default PaymentScreen = ({ navigation }) => {
                 <View style={{ backgroundColor: 'white', flexDirection: 'column', paddingVertical: 15, borderTopWidth: 0.5, justifyContent: 'space-between' }}>
                     <Text style={{ textTransform: 'uppercase' }}>Tax && Fee Detail</Text>
                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginTop: 20 }}>
-                        <Text style={{ fontSize: 18 }}>$20 x 9 nights</Text>
-                        <Text style={{ fontSize: 18 }}>180 $</Text>
+                        <Text style={{ fontSize: 18 }}>${data.price} x {countDays(data.checkIn, data.checkOut)} nights</Text>
+                        <Text style={{ fontSize: 18 }}>{data.price * countDays(data.checkIn, data.checkOut)} $</Text>
                     </View>
                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginTop: 20 }}>
                         <Text style={{ fontSize: 18 }}>Service</Text>
-                        <Text style={{ fontSize: 18 }}>20 $</Text>
-                    </View>
-                    <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginTop: 20 }}>
-                        <Text style={{ fontSize: 18 }}>Tax * 10%</Text>
-                        <Text style={{ fontSize: 18 }}>18 $</Text>
+                        <Text style={{ fontSize: 18 }}>{data.serviceFee} $</Text>
                     </View>
                 </View>
                 <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingVertical: 15, borderTopWidth: 0.5, justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 22 }}>Total</Text>
-                    <Text style={{ fontSize: 22 }}>218 $</Text>
+                    <Text style={{ fontSize: 22 }}>{totalPrice()} $</Text>
                 </View>
                 <View style={{ backgroundColor: 'white', paddingVertical: 15, borderTopWidth: 0.5, alignItems: 'center' }}>
                     <TouchableOpacity style={{ borderRadius: 10, height: 50, width: 300, backgroundColor: '#ff471a', justifyContent: 'center', alignItems: 'center' }}
@@ -141,7 +155,7 @@ export default PaymentScreen = ({ navigation }) => {
                 visible={isShowModal}
                 onRequestClose={() => setIsShowModal(false)}
             >
-                <WebView source={{ uri: 'http://' + ipServer + ':8080/home' }}
+                <WebView source={{ uri: baseURL + '/home' }}
                     onNavigationStateChange={(data) => handleCheckoutData(data)}
                     injectedJavaScript={`document.checkoutForm.submit()`} />
             </Modal>
