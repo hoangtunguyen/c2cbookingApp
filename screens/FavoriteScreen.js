@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import RoomComponent from '../components/HomeComponent/RoomComponent';
-
+import { DEFAULT_DATA_ROOM } from "../util/Util";
 export default FavoriteScreen = ({ navigation }) => {
     const screenWidth = Math.round(Dimensions.get('window').width);
 
@@ -13,20 +13,20 @@ export default FavoriteScreen = ({ navigation }) => {
                         <Text style={{ fontSize: 22, fontWeight: '700' }}>Beautiful house</Text>
                     </View>
                     <TouchableOpacity style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}
-                        onPress={() => navigation.navigate('DetailRoom')}
+                        onPress={() => navigation.navigate('DetailRoom', {idRoom : DEFAULT_DATA_ROOM.id})}
                     >
-                        <RoomComponent plusFontSize={3} />
+                        <RoomComponent data={DEFAULT_DATA_ROOM} plusFontSize={3} />
                     </TouchableOpacity>
 
 
-                    <View style={{ marginLeft: 20, marginTop: 10 }}>
+                    {/* <View style={{ marginLeft: 20, marginTop: 10 }}>
                         <Text style={{ fontSize: 22, fontWeight: '700' }}>Amazing apartment</Text>
                     </View>
                     <TouchableOpacity style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}
                         onPress={() => navigation.navigate('DetailRoom')}
                     >
                         <RoomComponent plusFontSize={3} />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </ScrollView>
             </View>
         </View>

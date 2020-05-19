@@ -22,7 +22,6 @@ export default PaymentScreen = ({ navigation, route }) => {
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
-    
     // const getData = async () => {
     //     try {
     //         const value = await AsyncStorage.getItem('IP_SERVER')
@@ -36,16 +35,21 @@ export default PaymentScreen = ({ navigation, route }) => {
     //     }
     // }
     function handleCheckoutData(data) {
-        if (data.title == "success") {
+        if (data.title === 'success') {
+            console.log('Success');
             setIsShowModal(false);
-
-        }
+            bookRoom();
+            // navigation.navigate('Profile');
+        } else if (data.title === "cancel") {
+            setIsShowModal(false);
+        } else return;
     };
-    // useEffect(() => {
-    //     getData();
-    // }, [])
-    const dataFormat = (date)=>{
-        let temp = Moment(new Date(new Date(date).getTime() + MILISECONDS_PER_DAY)).format('DD MMM');
+    useEffect(() => {
+        // getData();
+        // bookRoom();
+    }, [])
+    const dataFormat = (date) => {
+        let temp = Moment(new Date(new Date(date).getTime())).format('DD MMM');
         return temp;
     };
     const totalPrice = () => {
@@ -58,6 +62,36 @@ export default PaymentScreen = ({ navigation, route }) => {
             increasingPrice: data.increasingPrice
         });
     }
+
+    async function bookRoom() {
+        try {
+            const response = await fetch(baseURL + '/bookRoom', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "checkInDate": data.checkIn,
+                    "checkOutDate": data.checkOut,
+                    "bookingDate": new Date(),
+                    "roomId": data.id,
+                    "userId": 1,
+                    "infantCount": 0,
+                    "guestCount": guests,
+                    "totalCost": totalPrice()+ "",
+                    "isPaid" : true
+                })
+            });
+            console.log(response.status);
+            if(response.status == 200){
+                navigation.popToTop();
+            } 
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
     return (
         <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 20, paddingTop: 0, alignItems: 'center' }}>
             <ModalRN isVisible={isModalVisible}>
@@ -83,11 +117,11 @@ export default PaymentScreen = ({ navigation, route }) => {
                             fontSize={18}
                         />
                     </View>
-                    <View style={{flexDirection: 'row', marginHorizontal: 20, justifyContent: 'space-between', marginTop: 20, borderTopWidth: 0.2, paddingVertical: 15}}>
-                        <TouchableOpacity style={{backgroundColor: '#40c5f4', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 15}}
-                        onPress={() => toggleModal()}
+                    <View style={{ flexDirection: 'row', marginHorizontal: 20, justifyContent: 'space-between', marginTop: 20, borderTopWidth: 0.2, paddingVertical: 15 }}>
+                        <TouchableOpacity style={{ backgroundColor: '#40c5f4', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 15 }}
+                            onPress={() => toggleModal()}
                         >
-                            <Text style={{fontSize: 16}}>Close</Text>
+                            <Text style={{ fontSize: 16 }}>Close</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -157,7 +191,7 @@ export default PaymentScreen = ({ navigation, route }) => {
             >
                 <WebView source={{ uri: baseURL + '/home' }}
                     onNavigationStateChange={(data) => handleCheckoutData(data)}
-                    injectedJavaScript={`document.checkoutForm.submit()`} />
+                    injectedJavaScript={`document.getElementById('price').value =` + totalPrice() + `; document.checkoutForm.submit()`} />
             </Modal>
 
         </View>
