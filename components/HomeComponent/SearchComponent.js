@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -18,14 +18,40 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { baseURL } from "../../util/Util";
+export default Search = ({setData}) => {
+    const [searchData, setSearchData] = useState({
+        guestCount: null,
+        minPrice: null,
+        maxPrice: null,
+        location: null,
+        nameRoom: null
+    });
+    async function searchRoom() {
+        try {
+            let url = new URL(baseURL + '/room/search');
+            Object.keys(searchData).forEach(key => url.searchParams.append(key, searchData[key]))
+            const response = await fetch(url);
+            if(response.status == 200){
+                const data = await response.json();
+                setData(data);
+                console.log(data);
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
 
-export default Search = () => {
+    useEffect(() => {
+        searchRoom();
+    }, [searchData])
     return (
         <View style={styles.container}>
             <View style={[styles.searchView]}>
                 <View style={styles.searchIcon}><Icon name="search" size={27} color="black" /></View>
                 <TextInput style={styles.searchInput}
-                    placeholder="Search"></TextInput>
+                    placeholder="Search" onChangeText={(val) => setSearchData({ ...searchData, nameRoom: val })}></TextInput>
             </View>
             <View style={styles.searchMoreView}>
                 <TouchableOpacity

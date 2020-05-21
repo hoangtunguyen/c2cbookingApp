@@ -26,7 +26,7 @@ export default ShowAllRoomsScreen = ({navigation}) => {
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ flex: 1 }}>
-                <Search />
+                <Search setData={setAllRoomData} />
                 <ScrollView>
                     <View style={{ marginLeft: 20, marginBottom: 10 }}>
                         <Text style={{ fontSize: 22, fontWeight: '700' }}>Show more 100+ stays</Text>

@@ -6,6 +6,7 @@ import Room from "../components/HomeComponent/RoomComponent";
 import { baseURL } from "../util/Util";
 export default HomeScreen = ({ navigation }) => {
     const [favoriteRoomsData, setFavoriteRoomsData] = useState(null);
+    const [dataRoom, setDataRoom] = useState(null);
     async function getFavoriteRooms() {
         try {
             const response = await fetch(baseURL+'/room/favorite/5');
@@ -23,7 +24,7 @@ export default HomeScreen = ({ navigation }) => {
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ flex: 1 }}>
-                <Search />
+                <Search setData={setDataRoom} />
 
                 <ScrollView style={{}}
                     scrollEventThrottle={16}

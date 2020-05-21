@@ -1,8 +1,24 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
+import { baseURL } from "../util/Util";
 export default ProfileScreen = () => {
+
+    const [bookingData, setBookingData] = useState(null);
+    async function getBookingListByUserId(userId) {
+        try {
+            const response = await fetch(baseURL + '/booking/list?userId=' + userId);
+            const data = await response.json();
+            setBookingData(data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        getBookingListByUserId(1);
+    }, []);
     return (
         <ScrollView style={{ flex: 1 }}>
             <LinearGradient colors={['#a1c4fd', '#c2e9fb']} style={styles.linearGradient}>
@@ -15,18 +31,24 @@ export default ProfileScreen = () => {
                 </View>
             </LinearGradient>
             <View style={{ backgroundColor: 'transparent', marginHorizontal: 20 }}>
-                <Text style={{fontWeight: '700', fontSize: 22}}>Lastest Booking</Text>
-                <TouchableOpacity style={styles.tagBox}>
-                    <View style={{ flex: 2, padding: 5, backgroundColor: '#48c6ef', borderRadius: 20, justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 22, textAlign: 'center', fontWeight: '600' }}>DA NANG</Text>
-                    </View>
-                    <View style={{ flex: 7, backgroundColor: 'white', justifyContent: 'center', borderRadius: 20, paddingHorizontal: 5 }}>
-                        <Text style={{ fontSize: 18 }}>Louis bdl, full house in downtown</Text>
-                        <Text style={{ fontSize: 20, fontWeight: '700' }}>$210</Text>
-                    </View>
-                </TouchableOpacity>
+                <Text style={{ fontWeight: '700', fontSize: 22 }}>Lastest Booking</Text>
+                {bookingData != null && bookingData.map((data, key) => {
+                    return (
+                        <TouchableOpacity style={styles.tagBox} key={key}>
+                            <View style={{ flex: 2, padding: 5, backgroundColor: '#48c6ef', borderRadius: 20, justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 22, textAlign: 'center', fontWeight: '600', textTransform: 'uppercase' }}>{data.roomResponse.city}</Text>
+                            </View>
+                            <View style={{ flex: 7, backgroundColor: 'white', justifyContent: 'center', borderRadius: 20, paddingHorizontal: 5 }}>
+                                <Text style={{ fontSize: 18 }}>{data.roomResponse.name}</Text>
+                                <Text style={{ fontSize: 20, fontWeight: '700' }}>${data.totalCost}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    )
+                })
 
-                <TouchableOpacity style={styles.tagBox}>
+                }
+
+                {/* <TouchableOpacity style={styles.tagBox}>
                     <View style={{ flex: 2, padding: 5, backgroundColor: '#ff7eb3', borderRadius: 20, justifyContent: 'center' }}>
                         <Text style={{ fontSize: 22, textAlign: 'center', fontWeight: '600' }}>VINH</Text>
                     </View>
@@ -34,7 +56,7 @@ export default ProfileScreen = () => {
                         <Text style={{ fontSize: 18 }}>Chestnut 4 - 3 minute walk to Dragon Bridge</Text>
                         <Text style={{ fontSize: 20, fontWeight: '700' }}>$180</Text>
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
             </View>
         </ScrollView>

@@ -65,7 +65,7 @@ export default PaymentScreen = ({ navigation, route }) => {
 
     async function bookRoom() {
         try {
-            const response = await fetch(baseURL + '/bookRoom', {
+            const response = await fetch(baseURL + '/booking', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -166,8 +166,8 @@ export default PaymentScreen = ({ navigation, route }) => {
                 <View style={{ backgroundColor: 'white', flexDirection: 'column', paddingVertical: 15, borderTopWidth: 0.5, justifyContent: 'space-between' }}>
                     <Text style={{ textTransform: 'uppercase' }}>Tax && Fee Detail</Text>
                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginTop: 20 }}>
-                        <Text style={{ fontSize: 18 }}>${data.price} x {countDays(data.checkIn, data.checkOut)} nights</Text>
-                        <Text style={{ fontSize: 18 }}>{data.price * countDays(data.checkIn, data.checkOut)} $</Text>
+                        <Text style={{ fontSize: 18 }}>${data.price - 0  + (guests > data.minGuestCount ? (guests - data.minGuestCount) * data.increasingPrice : 0)} x {countDays(data.checkIn, data.checkOut)} nights</Text>
+                        <Text style={{ fontSize: 18 }}>{totalPrice() - data.serviceFee} $</Text>
                     </View>
                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginTop: 20 }}>
                         <Text style={{ fontSize: 18 }}>Service</Text>
