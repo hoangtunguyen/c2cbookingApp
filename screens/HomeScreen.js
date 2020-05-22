@@ -60,7 +60,7 @@ export default HomeScreen = ({ navigation }) => {
                                         <TouchableOpacity style={{ width: 230, height: 240, backgroundColor: 'red', marginRight: 15 }}
                                             key={index}
                                             onPress={() => navigation.navigate('DetailRoom', {idRoom : data.id})}>
-                                            <Room data={data}/>
+                                            <Room data={data} navigation={navigation}/>
                                         </TouchableOpacity>
                                     );
                                 })

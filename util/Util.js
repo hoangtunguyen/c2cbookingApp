@@ -5,7 +5,7 @@ export const countDays = (start, finish) => {
     let duration = new Date(finish) - new Date(start);
     return (duration / MILISECONDS_PER_DAY) + 1;
 }
-export const baseURL = "http://192.168.1.7:8080";
+export const baseURL = "http://192.168.1.6:8080";
 
 export const calTotalPrice = (data) => {
     let increasingFee = data.guests > data.minGuests ? (data.guests - data.minGuests) * data.increasingPrice : 0 
@@ -21,4 +21,28 @@ export const DEFAULT_DATA_ROOM = {
     "rating": "4.5",
     "price": 26,
     "urlImage": "https://i.imgur.com/mkvxMaT.jpg"
+};
+
+export async function addOrDeleteFavorite(data, setResponse) {
+    try {
+        const response = await fetch(baseURL + '/room/addOrDeleteFavorite', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title : data.title,
+                roomId: data.roomId,
+                userId : data.userId
+            })
+        });
+        if(response.status == 200){
+            const data = await response.json();
+            setResponse(data.data == "added" ? true : false);
+        }
+    }
+    catch (error) {
+        console.error(error);
+    }
 };

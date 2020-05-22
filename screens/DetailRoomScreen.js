@@ -3,12 +3,14 @@ import { View, Text, TouchableOpacity, Image, ScrollView, Dimensions, FlatList }
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AmenitiesComponent from "../components/OtherComponent/AmenitiesComponent";
 import MapComponent from "../components/OtherComponent/MapComponent";
-import { baseURL } from "../util/Util";
+import { baseURL, addOrDeleteFavorite } from "../util/Util";
 
 export default DetailRoomScreen = ({ navigation, route }) => {
     const DOLLAR_SIGN = '\u0024';
     const screenWidth = Math.round(Dimensions.get('window').width);
     const [detailData, setDetailData] = useState(null);
+    const [isFavorite, setIsFavorite] = useState(null);
+
     async function getDetailRoom(idRoom) {
         try {
             const response = await fetch(baseURL + '/room/detail/' + idRoom);
@@ -19,9 +21,25 @@ export default DetailRoomScreen = ({ navigation, route }) => {
             console.error(error);
         }
     };
+    async function isFavoriteFc(userId, roomId) {
+        try {
+            const response = await fetch(baseURL + '/room/isFavorite?userId=' + userId + '&roomId=' + roomId);
+            const data = await response.json();
+            if (data.data) {
+                setIsFavorite(true);
+            } else {
+                setIsFavorite(false);
+            }
+            console.log(data.data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
         let idRoom = route.params["idRoom"];
         getDetailRoom(idRoom);
+        isFavoriteFc(1, idRoom);
     }, []);
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -34,8 +52,10 @@ export default DetailRoomScreen = ({ navigation, route }) => {
                             <View style={{ flex: 1 }}>
                                 <Image source={{ uri: detailData.urlImage }}
                                     style={{ flex: 1, width: screenWidth, height: 233, resizeMode: 'cover' }} />
-                                <TouchableOpacity style={{ position: 'absolute', right: 10, top: 10 }}>
-                                    <Icon name="gratipay" size={50} color="white" />
+                                <TouchableOpacity style={{ position: 'absolute', right: 10, top: 10 }}
+                                    onPress={() => addOrDeleteFavorite({ title: detailData.name, roomId: detailData.id, userId: 1 }, setIsFavorite)}
+                                >
+                                    <Icon name="gratipay" size={50} color={isFavorite ? "red" : "white"} />
                                 </TouchableOpacity>
                             </View>
                             <View style={{ marginLeft: 15 }}>

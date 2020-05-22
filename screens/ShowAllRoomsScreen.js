@@ -38,7 +38,7 @@ export default ShowAllRoomsScreen = ({navigation}) => {
                                 key={index}
                                 onPress={()=> navigation.navigate('DetailRoom', {idRoom : data.id})}
                                 >
-                                    <RoomComponent plusFontSize={3} data={data} />
+                                    <RoomComponent plusFontSize={3} data={data} navigation={navigation} />
                                 </TouchableOpacity>
                             );
                         })
