@@ -20,15 +20,17 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default Category = ({ url, title }) => {
+export default Category = ({data, navigation }) => {
     return (
-        <View style={styles.boxCategory}>
+        <TouchableOpacity style={styles.boxCategory}
+        onPress={() => navigation.navigate("ShowAllRooms", {roomTypeId : data.id})}
+        >
             <View style={{ flex: 5  }}>
-                <Image source={{ uri: url }}
+                <Image source={{ uri: data.urlIcon }}
                     style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }} />
             </View>
-            <View style={{ flex: 2, paddingLeft: 10, paddingTop: 5 }}><Text>{title === undefined ? "Room" : title}</Text></View>
-        </View>
+            <View style={{ flex: 2, paddingLeft: 10, paddingTop: 5 }}><Text>{data.typename === undefined ? "Room" : data.typename}</Text></View>
+        </TouchableOpacity>
 
     );
 }

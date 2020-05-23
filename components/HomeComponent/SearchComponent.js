@@ -7,7 +7,8 @@ import {
     Text,
     StatusBar,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Modal
 } from 'react-native';
 
 import {
@@ -18,24 +19,32 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+
 import { baseURL } from "../../util/Util";
-export default Search = ({setData}) => {
-    const [searchData, setSearchData] = useState({
+import ModalRN from 'react-native-modal';
+
+export default Search = ({ setData, dataSearch }) => {
+    const [isShowModal, setIsShowModal] = useState(false);
+
+    const [searchData, setSearchData] = useState(dataSearch != undefined ? dataSearch : {
         guestCount: null,
         minPrice: null,
         maxPrice: null,
         location: null,
-        nameRoom: null
+        nameRoom: null,
+        roomTypeId: null
     });
     async function searchRoom() {
         try {
             let url = new URL(baseURL + '/room/search');
             Object.keys(searchData).forEach(key => url.searchParams.append(key, searchData[key]))
             const response = await fetch(url);
-            if(response.status == 200){
+            if (response.status == 200) {
                 const data = await response.json();
+                console.log(data);
                 setData(data);
-                // console.log(data);
+
             }
         }
         catch (error) {
@@ -44,6 +53,7 @@ export default Search = ({setData}) => {
     };
 
     useEffect(() => {
+        console.log(searchData);
         searchRoom();
     }, [searchData])
     return (
@@ -53,23 +63,50 @@ export default Search = ({setData}) => {
                 <TextInput style={styles.searchInput}
                     placeholder="Search" onChangeText={(val) => setSearchData({ ...searchData, nameRoom: val })}></TextInput>
             </View>
-            <View style={styles.searchMoreView}>
+            <ScrollView style={styles.searchMoreView}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+            >
+
                 <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text style={styles.searchMoreText}>Date</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text style={styles.searchMoreText}>Guest</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
+                    style={{ ...styles.button, backgroundColor: '#80b3ff' }}
+                    onPress={() => setIsShowModal(true)}
                 >
                     <Text style={styles.searchMoreText}>Filters</Text>
                 </TouchableOpacity>
-            </View>
+                {
+                    searchData["guestCount"] != null &&
+                    <TouchableOpacity
+                        style={styles.button}
+                    >
+                        <Text style={styles.searchMoreText}>{searchData["guestCount"]} Guests</Text>
+                    </TouchableOpacity>
+                }
+                {
+                    searchData["location"] != null &&
+                    <TouchableOpacity
+                        style={styles.button}
+                    >
+                        <Text style={styles.searchMoreText}>{searchData["location"]}</Text>
+                    </TouchableOpacity>
+                }
+            </ScrollView>
+
+            <ModalRN
+                isVisible={isShowModal}
+            // onRequestClose={() => setIsShowModal(false)}
+            >
+                <View style={modalStyles.container}>
+                    <TouchableOpacity style={modalStyles.close_bg} onPress={() => setIsShowModal(false)}>
+                        <EvilIcons name="close" size={40} color="black" />
+                    </TouchableOpacity>
+                    <View style={{ backgroundColor: 'red', marginHorizontal: 20 }}>
+                        <View>
+                            <Text>Type of Places</Text>
+                        </View>
+                    </View>
+                </View>
+            </ModalRN>
         </View>
     );
 }
@@ -116,8 +153,42 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         marginRight: 10,
         borderRadius: 15,
+
+        flexDirection: 'row'
     },
     searchMoreText: {
         fontSize: 17,
     }
 });
+const modalStyles = StyleSheet.create({
+    container: {
+        backgroundColor: 'white',
+        flex: 1,
+        borderRadius: 20
+    },
+    close_bg: {
+        // position: 'absolute',
+        // top: 20,
+        // left: 15,
+        marginLeft: 15,
+        marginVertical: 10,
+        backgroundColor: 'white',
+        zIndex: 1,
+        height: 60,
+        width: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 100,
+
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+    }
+})

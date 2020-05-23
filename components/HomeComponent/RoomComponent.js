@@ -36,25 +36,21 @@ export default Room = ({navigation, plusFontSize, data }) => {
             }else{
                 setIsFavorite(false);
             }
-            // console.log(data.data);
         }
         catch (error) {
             console.error(error);
         }
     };
 
+    // useEffect(() => {
+    //     isFavoriteFc(1, data.id);
+    // }, []);
     useEffect(() => {
-        console.log('room'+data.id);
-        console.log(data.name);
         isFavoriteFc(1, data.id);
-    }, []);
-
+    });
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
           // do something
-          console.log('room'+data.id);
-          console.log(data.name);
-
           isFavoriteFc(1, data.id);
         });
         return unsubscribe;

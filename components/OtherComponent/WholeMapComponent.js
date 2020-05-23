@@ -1,12 +1,12 @@
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ImageBackground, Image } from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Carousel from 'react-native-snap-carousel';
 import CarouselComponent from "../OtherComponent/CarouselComponent";
-export default ({ navigation }) => {
+export default ({ navigation, route }) => {
     const image = { uri: "https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg" };
     const [coordinate, setCoordinate] = useState([
         { title: "Louis bdl, full house in down town", latitude: 37.79045, longitude: -122.4324, description: "30$/ Night", image: 'https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg' },
@@ -14,6 +14,7 @@ export default ({ navigation }) => {
         { title: "Happy Home", latitude: 37.78245, longitude: -122.4344, description: "35$/ Night", image: 'https://blog.rever.vn/hubfs/ta-van-riverside-homestay.jpg' },
 
     ]);
+    const [dataRoom, setDataRoom] = useState(route.params["roomData"]);
     const [carousel, setCarousel] = useState(null);
     const [map, setMap] = useState(null);
     var markerArr = [];
@@ -27,30 +28,30 @@ export default ({ navigation }) => {
                 paddingHorizontal: 0,
             }}
             onPress={()=> {
-                navigation.navigate('DetailRoom');
+                navigation.navigate('DetailRoom', {idRoom : item.id});
             }}
             >
 
                 <View style={{ flex: 3 }}>
-                    <Image source={{ uri: item.image }}
+                    <Image source={{ uri: item.urlImage }}
                         style={styles.image} />
                 </View>
                 <View style={{ flex: 5, justifyContent: 'center', paddingLeft: 10 }}>
-                    <Text style={{ fontSize: 18, }}>{item.title}</Text>
-                    <Text style={{ fontSize: 18, fontWeight: '700', marginTop: 10 }}>{item.description}</Text>
+                    <Text style={{ fontSize: 18, }}>{item.name}</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '700', marginTop: 10 }}>{item.price} $/night</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
                         <Icon name="star" size={20} color="red" />
-                        <Text style={{ fontSize: 18 }}> 4.9 (102)</Text>
+                        <Text style={{ fontSize: 18 }}> {item.rating} ({item.votedCount})</Text>
                     </View>
                 </View>
             </TouchableOpacity>
         )
     }
     const _onCarouselItemChange = (index) =>{
-        let location = coordinate[index];
+        let location = dataRoom[index];
         map.animateToRegion({
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: location.lat,
+            longitude: location.lng,
             latitudeDelta: 0.09,
             longitudeDelta: 0.035
           });
@@ -63,6 +64,7 @@ export default ({ navigation }) => {
     const updateRefMarker = (ref, index) =>{
         markerArr[index] = ref;
     }
+
     return (
         <View style={styles.container}>
             <TouchableOpacity style={modalStyles.close_bg}>
@@ -74,26 +76,26 @@ export default ({ navigation }) => {
                 style={styles.map}
                 ref={map => setMap(map)}
                 region={{
-                    latitude: 37.78825,
-                    longitude: -122.4324,
+                    latitude: dataRoom[0].lat,
+                    longitude: dataRoom[0].lng,
                     latitudeDelta: 0.015,
                     longitudeDelta: 0.0121,
                 }}
             >
 
                 {
-                    coordinate.map((marker, index) => {
+                    dataRoom.map((marker, index) => {
                         return (
                             <MapView.Marker
                                 key={index}
                                 ref={ref => updateRefMarker(ref, index)}
                                 coordinate={{
-                                    latitude: marker.latitude,
-                                    longitude: marker.longitude
+                                    latitude: marker.lat,
+                                    longitude: marker.lng
                                 }}
                                 onPress={() => onMarkerPressed(marker, index)}
-                                title={marker.title}
-                                description={marker.description}
+                                title={marker.name}
+                                description={marker.price + "$/night"}
                             />
                         )
                     })
@@ -105,7 +107,7 @@ export default ({ navigation }) => {
                 <Carousel
                     layout={'default'}
                     ref={(c) => { setCarousel(c) }}
-                    data={coordinate}
+                    data={dataRoom}
                     renderItem={_renderItem}
                     sliderWidth={Dimensions.get('window').width}
                     itemWidth={350}

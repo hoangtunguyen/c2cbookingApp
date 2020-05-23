@@ -7,6 +7,8 @@ import { baseURL } from "../util/Util";
 export default HomeScreen = ({ navigation }) => {
     const [favoriteRoomsData, setFavoriteRoomsData] = useState(null);
     const [dataRoom, setDataRoom] = useState(null);
+    const [dataRoomType, setDataRoomType] = useState(null);
+
     async function getFavoriteRooms() {
         try {
             const response = await fetch(baseURL+'/room/favorite/5');
@@ -17,9 +19,19 @@ export default HomeScreen = ({ navigation }) => {
             console.error(error);
         }
     };
-
+    async function getDataRoomType() {
+        try {
+            const response = await fetch(baseURL+'/roomType/viewAll');
+            const data = await response.json();
+            setDataRoomType(data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
         getFavoriteRooms();
+        getDataRoomType();
     }, []);
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -39,9 +51,16 @@ export default HomeScreen = ({ navigation }) => {
                                 horizontal={true}
                                 showsHorizontalScrollIndicator={false}
                             >
-                                <Category url="https://i.imgur.com/vKwjc4K.jpg" title="Entire Room" />
+                                {
+                                    dataRoomType != null && dataRoomType.length > 0 && dataRoomType.map((data, key) => {
+                                        return (
+                                            <Category navigation={navigation} data={data} key={key} />
+                                        )
+                                    })
+                                }
+                                {/* <Category url="https://i.imgur.com/vKwjc4K.jpg" title="Entire Room" />
                                 <Category url="https://i0.wp.com/puluongecogarden.com/wp-content/uploads/private-room-onstilt-house-1068x674.jpg" title="Private Room" />
-                                <Category url="https://freshome.com/wp-content/uploads/2016/03/freshome-shared-bedroom-1.png" title="Shared Room" />
+                                <Category url="https://freshome.com/wp-content/uploads/2016/03/freshome-shared-bedroom-1.png" title="Shared Room" /> */}
                             </ScrollView>
                         </View>
                     </View>

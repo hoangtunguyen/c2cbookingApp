@@ -7,36 +7,51 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import WholeMapComponent from "../components/OtherComponent/WholeMapComponent";
 import { baseURL } from "../util/Util";
 
-export default ShowAllRoomsScreen = ({navigation}) => {
+export default ShowAllRoomsScreen = ({ navigation, route }) => {
     const screenWidth = Math.round(Dimensions.get('window').width);
     const [allRoomData, setAllRoomData] = useState(null);
-    async function getAllRooms() {
-        try {
-            const response = await fetch(baseURL + '/room/viewAll');
-            const data = await response.json();
-            setAllRoomData(data);
-        }
-        catch (error) {
-            console.error(error);
-        }
+    // async function getAllRooms() {
+    //     try {
+    //         const response = await fetch(baseURL + '/room/viewAll');
+    //         const data = await response.json();
+    //         setAllRoomData(data);
+    //     }
+    //     catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+    const dataSearch = {
+        guestCount: null,
+        minPrice: null,
+        maxPrice: null,
+        location: null,
+        nameRoom: null,
+        roomTypeId: route.params != undefined ? route.params["roomTypeId"] : null
     };
-    useEffect(() => {
-        getAllRooms();
-    }, []);
+    // useEffect(() => {
+    //     getAllRooms();
+    // }, []);
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ flex: 1 }}>
-                <Search setData={setAllRoomData} />
+                <Search dataSearch={dataSearch} setData={setAllRoomData} />
                 <ScrollView>
-                    <View style={{ marginLeft: 20, marginBottom: 10 }}>
-                        <Text style={{ fontSize: 22, fontWeight: '700' }}>Show more 100+ stays</Text>
-                    </View>
                     {
-                        allRoomData != null && allRoomData.map((data, index) =>{
-                            return(
+                        allRoomData != null && allRoomData.length > 0 ?
+                            <View style={{ marginLeft: 20, marginBottom: 10 }}>
+                                <Text style={{ fontSize: 22, fontWeight: '700' }}>Show more 100+ stays</Text>
+                            </View>
+                            : <View style={{ marginLeft: 20, marginBottom: 10 }}>
+                                <Text style={{ fontSize: 22, fontWeight: '700' }}>There are no rooms</Text>
+                            </View>
+                    }
+
+                    {
+                        allRoomData != null && allRoomData.length > 0 && allRoomData.map((data, index) => {
+                            return (
                                 <TouchableOpacity style={{ width: screenWidth, height: 270, paddingHorizontal: 20, marginVertical: 15 }}
-                                key={index}
-                                onPress={()=> navigation.navigate('DetailRoom', {idRoom : data.id})}
+                                    key={index}
+                                    onPress={() => navigation.navigate('DetailRoom', { idRoom: data.id })}
                                 >
                                     <RoomComponent plusFontSize={3} data={data} navigation={navigation} />
                                 </TouchableOpacity>
@@ -45,7 +60,7 @@ export default ShowAllRoomsScreen = ({navigation}) => {
                     }
                 </ScrollView>
             </View>
-            <TouchableOpacity style={styles.mapView} onPress={() => navigation.navigate('WholeMap')}>
+            <TouchableOpacity style={styles.mapView} onPress={() => navigation.navigate('WholeMap', { roomData: allRoomData })}>
                 <Icon name="map-marker" size={30} color="black" />
             </TouchableOpacity>
             {/* <Modal

@@ -30,7 +30,7 @@ export default DetailRoomScreen = ({ navigation, route }) => {
             } else {
                 setIsFavorite(false);
             }
-            console.log(data.data);
+            // console.log(data.data);
         }
         catch (error) {
             console.error(error);
