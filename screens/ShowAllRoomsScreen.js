@@ -39,7 +39,7 @@ export default ShowAllRoomsScreen = ({ navigation, route }) => {
                     {
                         allRoomData != null && allRoomData.length > 0 ?
                             <View style={{ marginLeft: 20, marginBottom: 10 }}>
-                                <Text style={{ fontSize: 22, fontWeight: '700' }}>Show more 100+ stays</Text>
+                                <Text style={{ fontSize: 22, fontWeight: '700' }}>Show more {allRoomData.length}+ stays</Text>
                             </View>
                             : <View style={{ marginLeft: 20, marginBottom: 10 }}>
                                 <Text style={{ fontSize: 22, fontWeight: '700' }}>There are no rooms</Text>

@@ -8,7 +8,7 @@ import {
     StatusBar,
     TextInput,
     TouchableOpacity,
-    Modal
+    Modal,
 } from 'react-native';
 
 import {
@@ -20,12 +20,13 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-
+import CheckBox from 'react-native-check-box'
 import { baseURL } from "../../util/Util";
 import ModalRN from 'react-native-modal';
 
 export default Search = ({ setData, dataSearch }) => {
     const [isShowModal, setIsShowModal] = useState(false);
+    const [dataRoomType, setDataRoomType] = useState(null);
 
     const [searchData, setSearchData] = useState(dataSearch != undefined ? dataSearch : {
         guestCount: null,
@@ -42,7 +43,7 @@ export default Search = ({ setData, dataSearch }) => {
             const response = await fetch(url);
             if (response.status == 200) {
                 const data = await response.json();
-                console.log(data);
+                // console.log(data);
                 setData(data);
 
             }
@@ -51,11 +52,52 @@ export default Search = ({ setData, dataSearch }) => {
             console.error(error);
         }
     };
-
+    const countFilters = () => {
+        let count = 0;
+        for (let key in searchData){
+            count += searchData[key] != null ? 1 : 0;
+        }
+        // setCountFilters(count);
+        return count;
+    }
+    async function getDataRoomType() {
+        try {
+            const response = await fetch(baseURL + '/roomType/viewAll');
+            const data = await response.json();
+            for (let i = 0; i < data.length; i++) {
+                data[i]["isChecked"] = false;
+            }
+            setDataRoomType(data);
+            // console.log(data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
-        console.log(searchData);
+        // console.log(searchData);
         searchRoom();
     }, [searchData])
+    useEffect(() => {
+        getDataRoomType();
+    }, [])
+    useEffect(() => {
+        if (dataRoomType != null) {
+            let idRoomTypeList = '';
+            for (let i = 0; i < dataRoomType.length; i++) {
+                if (dataRoomType[i].isChecked == true) {
+                    idRoomTypeList += dataRoomType[i].id + ",";
+                }
+            }
+            if (idRoomTypeList != null && idRoomTypeList.length > 0) idRoomTypeList = idRoomTypeList.substring(0, idRoomTypeList.length - 1);
+            else idRoomTypeList = null;
+            
+            // console.log(idRoomTypeList);
+            let tempSearchData = {...searchData};
+            tempSearchData.roomTypeId = idRoomTypeList;
+            setSearchData(tempSearchData);
+        }
+    }, [dataRoomType])
     return (
         <View style={styles.container}>
             <View style={[styles.searchView]}>
@@ -72,7 +114,7 @@ export default Search = ({ setData, dataSearch }) => {
                     style={{ ...styles.button, backgroundColor: '#80b3ff' }}
                     onPress={() => setIsShowModal(true)}
                 >
-                    <Text style={styles.searchMoreText}>Filters</Text>
+                    <Text style={styles.searchMoreText}>Filters {countFilters() > 0 ? countFilters() : ''}</Text>
                 </TouchableOpacity>
                 {
                     searchData["guestCount"] != null &&
@@ -100,9 +142,40 @@ export default Search = ({ setData, dataSearch }) => {
                     <TouchableOpacity style={modalStyles.close_bg} onPress={() => setIsShowModal(false)}>
                         <EvilIcons name="close" size={40} color="black" />
                     </TouchableOpacity>
-                    <View style={{ backgroundColor: 'red', marginHorizontal: 20 }}>
+                    <View style={{ backgroundColor: 'white', marginHorizontal: 20 }}>
                         <View>
-                            <Text>Type of Places</Text>
+                            <Text style={{ fontSize: 20, fontWeight: '700' }}>Type of Places</Text>
+                            <View>
+                                {/* <Text>Entire Room</Text> */}
+                                {
+                                    dataRoomType != null && dataRoomType.length > 0 && dataRoomType.map((data, key) => {
+                                        // console.log(data);
+                                        return (
+                                            <CheckBox
+                                                key={key}
+                                                style={{ flex: 1, paddingVertical: 15, }}
+                                                onClick={() => {
+                                                    // data.isChecked = !data.isChecked;
+                                                    // setDataRoomType(dataRoomType);
+                                                    let temp = dataRoomType;
+                                                    temp[key]["isChecked"] = !dataRoomType[key]["isChecked"];
+                                                    setDataRoomType(() => {
+                                                        return [
+                                                            ...temp
+                                                        ]
+                                                    });
+                                                }}
+                                                isChecked={dataRoomType[key]["isChecked"]}
+                                                leftText={data.typename}
+                                                leftTextStyle={{ fontSize: 18 }}
+
+                                            />
+                                        )
+                                    })
+                                }
+
+
+                            </View>
                         </View>
                     </View>
                 </View>
