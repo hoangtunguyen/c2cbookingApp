@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
-export default QRScreen = () => {
+export default InboxScreen = () => {
     return (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text>QRScreen</Text>
+            <Text>InboxScreen</Text>
         </View>
     );
 }

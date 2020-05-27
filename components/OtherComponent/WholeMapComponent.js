@@ -81,6 +81,7 @@ export default ({ navigation, route }) => {
                     latitudeDelta: 0.015,
                     longitudeDelta: 0.0121,
                 }}
+                onPress={ (event) => console.log(event.nativeEvent.coordinate) }
             >
 
                 {

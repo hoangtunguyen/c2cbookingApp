@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import Moment from 'moment';
+
 const MILISECONDS_PER_DAY = 86400000;
 export const countDays = (start, finish) => {
     if (start == null || finish == null) return 0;
     let duration = new Date(finish) - new Date(start);
     return (duration / MILISECONDS_PER_DAY) + 1;
 }
-export const baseURL = "http://192.168.88.102:8080";
+export const baseURL = "http://192.168.88.103:8080";
 
 export const calTotalPrice = (data) => {
     let increasingFee = data.guests > data.minGuests ? (data.guests - data.minGuests) * data.increasingPrice : 0 
     let total = (data.price + increasingFee) * data.countDays + data.serviceFee;
     return total;
 }
-
+export const dataFormat = (date) => {
+    let temp = Moment(new Date(new Date(date).getTime())).format('DD MMM');
+    return temp;
+};
 export const DEFAULT_DATA_ROOM = {
     "id": 1,
     "name": "Le Conte Danang Mezzanine room 601",

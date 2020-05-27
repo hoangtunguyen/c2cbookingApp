@@ -7,8 +7,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import HomeScreen from "./screens/HomeScreen";
-import QRScreen from "./screens/QRScreen";
-import VoiceScreen from "./screens/VoiceScreen";
+import SharedScreen from "./screens/SharedScreen";
+import InboxScreen from "./screens/InboxScreen";
 import FavoriteScreen from "./screens/FavoriteScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
@@ -74,10 +74,10 @@ const HomeTabNavigator = ({ navigation, route }) => {
           let iconName;
           if (route.name == "Home") {
             iconName = "home";
-          } else if (route.name == "QR") {
-            iconName = "qrcode";
-          } else if (route.name == "Voice") {
-            iconName = "microphone";
+          } else if (route.name == "Shared") {
+            iconName = "share-alt-square";
+          } else if (route.name == "Inbox") {
+            iconName = "inbox";
           } else if (route.name == "Favorite") {
             iconName = "heart";
           } else if (route.name == "Profile") {
@@ -88,13 +88,13 @@ const HomeTabNavigator = ({ navigation, route }) => {
       })}
     >
       <Tab.Screen name="Home" component={HomeStackNavigator} />
-      <Tab.Screen name="QR" component={QRScreen} />
+      <Tab.Screen name="Shared" component={SharedScreen} />
       <Tab.Screen
         // options={{
         //   tabBarLabel: '',
         // }}
-        name="Voice"
-        component={VoiceScreen} />
+        name="Inbox"
+        component={InboxScreen} />
       <Tab.Screen name="Favorite" component={FavoriteScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

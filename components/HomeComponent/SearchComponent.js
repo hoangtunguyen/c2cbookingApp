@@ -103,7 +103,7 @@ export default Search = ({ setData, dataSearch }) => {
             <View style={[styles.searchView]}>
                 <View style={styles.searchIcon}><Icon name="search" size={27} color="black" /></View>
                 <TextInput style={styles.searchInput}
-                    placeholder="Search" onChangeText={(val) => setSearchData({ ...searchData, nameRoom: val })}></TextInput>
+                    placeholder="Search" onChangeText={(val) => setSearchData({ ...searchData, nameRoom: val == null || val.trim() == '' ? null : val })}></TextInput>
             </View>
             <ScrollView style={styles.searchMoreView}
                 horizontal={true}

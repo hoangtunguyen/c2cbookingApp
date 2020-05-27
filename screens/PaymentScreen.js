@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import ModalRN from 'react-native-modal';
 import InputSpinner from "react-native-input-spinner";
 import Moment from 'moment';
-import { countDays, calTotalPrice } from "../util/Util";
+import { countDays, calTotalPrice, dataFormat } from "../util/Util";
 import { baseURL } from "../util/Util";
 
 export default PaymentScreen = ({ navigation, route }) => {
@@ -48,10 +48,10 @@ export default PaymentScreen = ({ navigation, route }) => {
         // getData();
         // bookRoom();
     }, [])
-    const dataFormat = (date) => {
-        let temp = Moment(new Date(new Date(date).getTime())).format('DD MMM');
-        return temp;
-    };
+    // const dataFormat = (date) => {
+    //     let temp = Moment(new Date(new Date(date).getTime())).format('DD MMM');
+    //     return temp;
+    // };
     const totalPrice = () => {
         return calTotalPrice({
             price: data.price,
