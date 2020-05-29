@@ -116,12 +116,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
       >
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Welcome" component={WelcomeScreen}
           options={({ route }) => ({
             // title: getHeaderTitle(route),
             headerShown: false
-          })} />
+          })} /> */}
         <Stack.Screen
           name="Home" component={HomeTabNavigator}
           options={({ route }) => ({
