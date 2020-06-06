@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Switch } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { baseURL } from "../util/Util";
 import ModalRN from 'react-native-modal';
@@ -10,6 +10,9 @@ export default ProfileScreen = () => {
     const [isShowModal, setIsShowModal] = useState(false);
     const [bookingData, setBookingData] = useState(null);
     const [bookingDetail, setBookingDetail] = useState(null);
+
+    const [isEnabled, setIsEnabled] = useState(false);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     async function getBookingListByUserId(userId) {
         try {
             const response = await fetch(baseURL + '/booking/list?userId=' + userId);
@@ -57,6 +60,19 @@ export default ProfileScreen = () => {
                     <Text style={{ fontSize: 22 }}>Nguyen Hoang Tu</Text>
                 </View>
             </LinearGradient>
+            <View style={{ backgroundColor: 'transparent', marginHorizontal: 20 }}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between',  paddingVertical: 10}}>
+                    <Text style={{ fontWeight: '700', fontSize: 22 }}>Switch to Owner</Text>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        style={{ transform: [{ scaleX: 1.7 }, { scaleY: 1.7 }] }}
+                        thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={isEnabled}
+                    />
+                </View>
+            </View>
             <View style={{ backgroundColor: 'transparent', marginHorizontal: 20 }}>
                 <Text style={{ fontWeight: '700', fontSize: 22 }}>Lastest Booking</Text>
                 {bookingData != null && bookingData.map((data, key) => {
@@ -115,7 +131,7 @@ export default ProfileScreen = () => {
                                 <View style={{ backgroundColor: 'white', flexDirection: 'column', paddingVertical: 15, borderTopWidth: 0.5, justifyContent: 'space-between' }}>
                                     <Text style={{ textTransform: 'uppercase' }}>Payment Detail</Text>
                                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 }}>
-                                        <Text style={{ fontSize: 18 }}>${bookingDetail.roomResponse.price - 0  + (bookingDetail.guestCount > bookingDetail.roomResponse.minGuestCount ? (bookingDetail.guestCount - bookingDetail.roomResponse.minGuestCount) * bookingDetail.roomResponse.increasingPrice : 0)} x {countDays(bookingDetail.checkInDate, bookingDetail.checkOutDate)} nights</Text>
+                                        <Text style={{ fontSize: 18 }}>${bookingDetail.roomResponse.price - 0 + (bookingDetail.guestCount > bookingDetail.roomResponse.minGuestCount ? (bookingDetail.guestCount - bookingDetail.roomResponse.minGuestCount) * bookingDetail.roomResponse.increasingPrice : 0)} x {countDays(bookingDetail.checkInDate, bookingDetail.checkOutDate)} nights</Text>
                                         <Text style={{ fontSize: 18 }}>{totalPrice(bookingDetail) - bookingDetail.roomResponse.serviceFee} $</Text>
                                     </View>
                                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 }}>

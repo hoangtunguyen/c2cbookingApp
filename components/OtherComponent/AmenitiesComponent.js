@@ -6,7 +6,7 @@ export default AmenitiesComponent = ({ data }) => {
 
     
     return (
-        <View style={{ height: 50, flexDirection: 'row', alignItems: "center" }}>
+        <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: "center" }}>
             <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 18 }}>{data['name']}</Text>
             </View>
@@ -14,6 +14,6 @@ export default AmenitiesComponent = ({ data }) => {
                 <Image source={{uri: data.iconUrl} }
                     style={{ width: 35, height: 35, marginRight: 20 }} />
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
