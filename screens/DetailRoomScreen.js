@@ -62,7 +62,7 @@ export default DetailRoomScreen = ({ navigation, route }) => {
                                 <Text style={{ fontSize: 30, fontWeight: '700' }}>{detailData.name}</Text>
                                 <View style={{ flexDirection: 'row', marginVertical: 10, }}>
                                     <TouchableOpacity style={{ backgroundColor: "#80b3ff", borderRadius: 5, paddingHorizontal: 10, paddingVertical: 3 }}>
-                                        <Text style={{ fontSize: 18, fontWeight: "500", textTransform: "uppercase" }}>{detailData.categoryRoom}</Text>
+                                        <Text style={{ fontSize: 18, fontWeight: "500", textTransform: "uppercase" }}>{detailData.typeRoom}</Text>
                                     </TouchableOpacity>
                                     <View style={{ flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', marginLeft: 20 }}>
                                         <Icon name="star" size={20} color="black" />

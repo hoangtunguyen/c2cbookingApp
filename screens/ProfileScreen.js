@@ -6,13 +6,16 @@ import ModalRN from 'react-native-modal';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { countDays, calTotalPrice, dataFormat } from "../util/Util";
 
-export default ProfileScreen = () => {
+export default ProfileScreen = ({navigation}) => {
     const [isShowModal, setIsShowModal] = useState(false);
     const [bookingData, setBookingData] = useState(null);
     const [bookingDetail, setBookingDetail] = useState(null);
 
     const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const toggleSwitch = () => {
+        // setIsEnabled(previousState => !previousState);
+        navigation.navigate('Host');
+    };
     async function getBookingListByUserId(userId) {
         try {
             const response = await fetch(baseURL + '/booking/list?userId=' + userId);

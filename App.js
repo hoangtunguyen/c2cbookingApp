@@ -19,8 +19,14 @@ import CalendarScreen from "./screens/CalendarScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import WholeMapComponent from "./components/OtherComponent/WholeMapComponent";
 
+
+import ProfileHostScreen from "./screens/host/ProfileHostScreen";
+import ProgressScreen from "./screens/host/ProgressScreen";
+import ListingScreen from "./screens/host/ListingScreen";
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const HostTab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 const HomeStackNavigator = ({ navigation, route }) => {
   const routeName = route.state ?
@@ -100,7 +106,32 @@ const HomeTabNavigator = ({ navigation, route }) => {
     </Tab.Navigator>
   );
 }
+const HostTabNavigator = ({ navigation, route }) => {
+  return (
+    <HostTab.Navigator
 
+      // initialRouteName="HomeStack"
+      activeColor="#adc"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+          if (route.name == "ProfileHost") {
+            iconName = "user-circle";
+          } else if (route.name == "Progress") {
+            iconName = "tasks";
+          }else if (route.name == "Listing") {
+            iconName = "houzz";
+          }
+          return <Icon name={iconName} size={size} color={color} />;
+        }
+      })}
+    >
+      <HostTab.Screen name="ProfileHost" component={ProfileHostScreen} />
+      <HostTab.Screen name="Progress" component={ProgressScreen} />
+      <HostTab.Screen name="Listing" component={ListingScreen} />
+    </HostTab.Navigator>
+  );
+}
 
 function isHeaderShown(route) {
   const routeName = route.state ?
@@ -124,6 +155,12 @@ export default function App() {
           })} /> */}
         <Stack.Screen
           name="Home" component={HomeTabNavigator}
+          options={({ route }) => ({
+            // title: getHeaderTitle(route),
+            headerShown: false
+          })} />
+          <Stack.Screen
+          name="Host" component={HostTabNavigator}
           options={({ route }) => ({
             // title: getHeaderTitle(route),
             headerShown: false

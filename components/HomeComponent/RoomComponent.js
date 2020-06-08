@@ -70,7 +70,7 @@ export default Room = ({navigation, plusFontSize, data }) => {
             <View style={{}}>
                 <View style={{ flexDirection: 'row', justifyContent: "space-between", marginTop: 5, }}>
                     <TouchableOpacity style={{ backgroundColor: "#80b3ff", borderRadius: 5, paddingHorizontal: 10, paddingVertical: 3 }}>
-                        <Text style={{ fontSize: 11 + plusFontSize, fontWeight: "500", textTransform: "uppercase" }}>{data.categoryRoom}</Text>
+                        <Text style={{ fontSize: 11 + plusFontSize, fontWeight: "500", textTransform: "uppercase" }}>{data.typeRoom}</Text>
                     </TouchableOpacity>
                     <View style={{ flexDirection: 'row', backgroundColor: 'white', alignItems: 'center' }}>
                         <Icon name="star" size={20} color="black" />
