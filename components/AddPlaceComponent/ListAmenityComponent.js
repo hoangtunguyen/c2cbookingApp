@@ -4,7 +4,7 @@ import { baseURL } from "../..//util/Util";
 import AmenitiesComponent from "../OtherComponent/AmenitiesComponent";
 import { ScrollView } from 'react-native-gesture-handler';
 
-export default ListAmenityComponent = () => {
+export default ListAmenityComponent = ({setFormRequest}) => {
     const [amenityData, setAmenityData] = useState(null);
     const [listId, setListId] = useState([]);
     async function getAllAmenity() {
@@ -25,6 +25,15 @@ export default ListAmenityComponent = () => {
     useEffect(() => {
         getAllAmenity();
     }, []);
+    useEffect(() => {
+        console.log(listId);
+        setFormRequest((pre) => {
+            return {
+                ...pre,
+                "amenityIdList" : listId
+            }
+        });
+    }, [listId]);
     const addAmenityId = (id) => {
         setListId((previous) => {
             if(previous.includes(id)){      

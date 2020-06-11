@@ -20,6 +20,9 @@ export default ListingScreen = ({ navigation }) => {
     useEffect(() => {
         getListRoom(1);
     }, []);
+    useEffect(() => {
+        getListRoom(1);
+    }, [isShowModal]);
     return (
         <View style={{ backgroundColor: 'white', height: '100%' }}>
             <View style={{ backgroundColor: 'white', alignItems: 'flex-end', paddingVertical: 5, paddingHorizontal: 25 }}>

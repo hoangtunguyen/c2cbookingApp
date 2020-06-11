@@ -11,7 +11,7 @@ import {
 import { baseURL } from "../../util/Util";
 import CheckBox from 'react-native-check-box'
 import InputSpinner from "react-native-input-spinner";
-export default PropertyAndGuestComponent = () => {
+export default PropertyAndGuestComponent = ({setFormRequest}) => {
     const [propertyRequest, setPropertyRequest] = useState({roomTypeId: null });
 
     const [dataRoomType, setDataRoomType] = useState(null);
@@ -25,9 +25,26 @@ export default PropertyAndGuestComponent = () => {
             console.error(error);
         }
     };
+
+    const setProperty= (obj)=>{
+        setFormRequest((pre) => {
+            return {
+                ...pre,
+                ...obj
+            }
+        })
+    }
     useEffect(() => {
         getDataRoomType();
-    }, [])
+    }, []);
+    useEffect(() => {
+        setFormRequest((pre) => {
+            return {
+                ...pre,
+                "roomTypeId" : propertyRequest.roomTypeId
+            }
+        })
+    }, [propertyRequest])
     return (
         <View style={{paddingRight: 0}}>
             <View>
@@ -67,9 +84,9 @@ export default PropertyAndGuestComponent = () => {
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
                         value={1}
-                        // onChange={(num) => {
-                        //     setGuest(num);
-                        // }}
+                        onChange={(num) => {
+                            setProperty({"guestCount": num})
+                        }}
                         width={150}
                         height={40}
                         fontSize={18}
@@ -86,9 +103,9 @@ export default PropertyAndGuestComponent = () => {
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
                         value={1}
-                        // onChange={(num) => {
-                        //     setGuest(num);
-                        // }}
+                        onChange={(num) => {
+                            setProperty({"bedroomCount": num})
+                        }}
                         width={150}
                         height={40}
                         fontSize={18}
@@ -105,9 +122,9 @@ export default PropertyAndGuestComponent = () => {
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
                         value={1}
-                        // onChange={(num) => {
-                        //     setGuest(num);
-                        // }}
+                        onChange={(num) => {
+                            setProperty({"bedCount": num})
+                        }}
                         width={150}
                         height={40}
                         fontSize={18}
@@ -115,7 +132,7 @@ export default PropertyAndGuestComponent = () => {
                 </View>
                 <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <View>
-                        <Text style={{ fontSize: 18 }}>Bedrooms for guests </Text>
+                        <Text style={{ fontSize: 18 }}>Bathrooms for guests </Text>
                     </View>
                     <InputSpinner
                         max={5}
@@ -124,9 +141,9 @@ export default PropertyAndGuestComponent = () => {
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
                         value={1}
-                        // onChange={(num) => {
-                        //     setGuest(num);
-                        // }}
+                        onChange={(num) => {
+                            setProperty({"bathroomCount": num})
+                        }}
                         width={150}
                         height={40}
                         fontSize={18}
@@ -146,9 +163,9 @@ export default PropertyAndGuestComponent = () => {
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
                         value={1}
-                        // onChange={(num) => {
-                        //     setGuest(num);
-                        // }}
+                        onChange={(num) => {
+                            setProperty({"minGuestCount": num})
+                        }}
                         width={150}
                         height={40}
                         fontSize={18}

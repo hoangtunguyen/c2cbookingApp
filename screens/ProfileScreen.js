@@ -41,6 +41,9 @@ export default ProfileScreen = ({navigation}) => {
     useEffect(() => {
         getBookingListByUserId(1);
     }, []);
+    useEffect(() => {
+        getBookingListByUserId(1);
+    });
     const totalPrice = (bookingDetail) => {
         return calTotalPrice({
             price: bookingDetail.roomResponse.price,

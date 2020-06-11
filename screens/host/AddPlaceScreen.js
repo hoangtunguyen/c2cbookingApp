@@ -19,57 +19,69 @@ import InputSpinner from "react-native-input-spinner";
 import ListAmenityComponent from "../../components/AddPlaceComponent/ListAmenityComponent";
 import LocationComponent from "../../components/AddPlaceComponent/LocationComponent";
 import PropertyAndGuestComponent from "../../components/AddPlaceComponent/PropertyAndGuestComponent";
+import UploadImageComponent from "../../components/AddPlaceComponent/UploadImageComponent";
 
-export default AddPlaceScreen = ({setIsShowModal}) => {
-    const [photo, setPhoto] = useState('https://res.cloudinary.com/ogcodes/image/upload/v1581387688/m0e7y6s5zkktpceh2moq.jpg');
-    async function cloudinaryUpload(source) {
-        try {
-            var myHeader = new Headers();
-            myHeader.append("Authorization", "Client-ID 565fdce260b5f64");
-            var data = new FormData();
-            data.append('image', source);
+export default AddPlaceScreen = ({ setIsShowModal }) => {
+    const [formRequest, setFormRequest] = useState(
+        {
+            "roomName": '',
+            "description": '',
 
-            let response = await fetch(
-                'https://api.imgur.com/3/upload', {
-                method: "POST",
-                body: data,
-                headers: myHeader
+            "price": 0,
+            "serviceFee": 0.00,
+            "feeIncreasingPerson": 0,
+
+            "roomTypeId": 0,
+            "guestCount": 0,
+            "bedroomCount": 0,
+            "bedCount": 0,
+            "bathroomCount": 0,
+            "minGuestCount": 0,
+
+
+
+            "location": {
+                "lat": "23.2222",
+                "lng": "23.3333",
+                "street": "50 Nguyen Phuoc Thai",
+                "cityId": 1
+            },
+            "ownerId": 1,
+            "urlImage": "https://i.imgur.com/1BZTQO6.png",
+            "amenityIdList": [1, 2, 3]
+        }
+    );
+    const setObjJson = (obj) => {
+        setFormRequest((pre) => {
+            return {
+                ...pre,
+                ...obj
             }
-            );
-            let json = await response.json();
-            console.log(json.data.link);
-            setPhoto(json.data.link);
-        } catch (error) {
+        })
+    }
+    async function addRoom(request) {
+        try {
+            const response = await fetch(baseURL + '/host/addRoom', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(request)
+            });
+            if(response.status == 200){
+               console.log("add success");
+               setIsShowModal(false);
+            }
+        }
+        catch (error) {
             console.error(error);
         }
-    }
-    const selectPhotoTapped = () => {
-        const options = {
-            title: 'Select Photo',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-        ImagePicker.showImagePicker(options, (response) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } else {
-                const uri = response.uri;
-                const type = response.type;
-                const name = response.fileName;
-                const source = {
-                    uri,
-                    type,
-                    name,
-                }
-                cloudinaryUpload(response.data);
-
-            }
-        });
     };
+
+    useEffect(() => {
+        console.log(formRequest);
+    }, [formRequest]);
     return (
         <ScrollView sty>
             <View style={{ backgroundColor: '#008489', height: 130, justifyContent: 'center', paddingLeft: 20 }}>
@@ -82,53 +94,61 @@ export default AddPlaceScreen = ({setIsShowModal}) => {
             <View style={{ backgroundColor: 'white' }}>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Property and guests</Text>
-                    <PropertyAndGuestComponent/>
+                    <PropertyAndGuestComponent setFormRequest={setFormRequest} />
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Location</Text>
-                    <LocationComponent />
+                    <LocationComponent setFormRequest={setFormRequest} />
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Amenities</Text>
-                    <ListAmenityComponent />
+                    <ListAmenityComponent setFormRequest={setFormRequest} />
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Photo</Text>
-                    <View style={{ width: '100%', height: 300 }}>
-                        <Image source={{ uri: photo }} style={{ flex: 1, width: null, height: null, resizeMode: "cover" }}></Image>
-                    </View>
-                    <View style={styles.uploadContainer}>
-                        {/* <Text style={styles.uploadContainerTitle}>ImagePicker to Cloudinary</Text> */}
-                        <TouchableOpacity onPress={selectPhotoTapped} style={styles.uploadButton}>
-                            <Text style={styles.uploadButtonText}>Upload</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <UploadImageComponent setFormRequest={setFormRequest} />
+                
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Title</Text>
                     <Text style={{ fontSize: 20 }}>What is your place name?</Text>
-                    <TextInput style={{ fontSize: 16 }} placeholder={'Input name of your place'}></TextInput>
+                    <TextInput
+                        onChangeText={(text) => { setObjJson({ "roomName": text }) }}
+                        style={{ fontSize: 16 }} placeholder={'Input name of your place'}></TextInput>
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Decription</Text>
                     <Text style={{ fontSize: 20 }}>Decribe your place?</Text>
-                    <TextInput style={{ fontSize: 16 }} placeholder={'Input name of your place'}></TextInput>
+                    <TextInput
+                        onChangeText={(text) => { setObjJson({ "description": text }) }}
+                        style={{ fontSize: 16 }} placeholder={'Input name of your place'}></TextInput>
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Pricing</Text>
                     <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={{ fontSize: 18 }}>Price of place</Text>
-                        <TextInput style={{ fontSize: 18 }} placeholder={'20' + ' $'}></TextInput>
+                        <TextInput
+                            onChangeText={(val) => { setObjJson({ "price": +val }) }}
+                            style={{ fontSize: 18 }} placeholder={'20' + ' $'}></TextInput>
                     </View>
                     <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={{ fontSize: 18 }}>Service Fee</Text>
-                        <TextInput style={{ fontSize: 18 }} placeholder={'20' + ' $'}></TextInput>
+                        <TextInput
+                            onChangeText={(val) => { setObjJson({ "serviceFee": +val }) }}
+                            style={{ fontSize: 18 }} placeholder={'20' + ' $'}></TextInput>
                     </View>
                     <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={{ fontSize: 18 }}>Fee of increasing guest</Text>
-                        <TextInput style={{ fontSize: 18 }} placeholder={'20' + ' $'}></TextInput>
+                        <TextInput
+                            onChangeText={(val) => { setObjJson({ "feeIncreasingPerson": +val }) }}
+                            style={{ fontSize: 18 }} placeholder={'20' + ' $'}></TextInput>
                     </View>
                 </View>
+                <TouchableOpacity
+                    onPress={() => addRoom(formRequest)}
+                    style={{ backgroundColor: '#008489', alignItems: 'center', marginHorizontal: 50, marginVertical: 20, padding: 20, borderRadius: 30 }}>
+                    <Text style={{ fontSize: 22, fontWeight: '700', color: 'white' }}>Save</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView >
     );
