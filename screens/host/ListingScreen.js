@@ -6,8 +6,37 @@ import { baseURL } from "../../util/Util";
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default ListingScreen = ({ navigation }) => {
+    const DEAULT_FORM_ROOM = {
+        "roomId" : null,
+        "roomName": '',
+        "description": '',
+
+        "price": 0,
+        "serviceFee": 0,
+        "feeIncreasingPerson": 0,
+
+        "roomTypeId": null,
+        "guestCount": 1,
+        "bedroomCount": 0,
+        "bedCount": 0,
+        "bathroomCount": 0,
+        "minGuestCount": 1,
+
+
+
+        "location": {
+            "lat": "16.068264",
+            "lng": "108.218894",
+            "street": "53 Nguyen Phuoc Thai",
+            "cityId": 2
+        },
+        "ownerId": 1,
+        "urlImage": "https://i.imgur.com/1BZTQO6.png",
+        "amenityIdList": []
+    };
     const [isShowModal, setIsShowModal] = useState(false);
     const [listRoomData, setListRoomData] = useState(null);
+    const [formData, setFormData] = useState(DEAULT_FORM_ROOM);
     async function getListRoom() {
         const USER_ID = await AsyncStorage.getItem('userId');
 
@@ -15,6 +44,21 @@ export default ListingScreen = ({ navigation }) => {
             const response = await fetch(baseURL + '/host/listings?userId=' + USER_ID);
             const data = await response.json();
             setListRoomData(data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+    async function getDetailRoom(roomId) {
+        // const USER_ID = await AsyncStorage.getItem('userId');
+        // console.log(roomId);
+        try {
+            const response = await fetch(baseURL + '/room/update?roomId=' + roomId);
+            const data = await response.json();
+            // console.log(data);
+            setFormData(data);
+            setIsShowModal(true);
+
         }
         catch (error) {
             console.error(error);
@@ -30,7 +74,10 @@ export default ListingScreen = ({ navigation }) => {
         <View style={{ backgroundColor: 'white', height: '100%' }}>
             <View style={{ backgroundColor: 'white', alignItems: 'flex-end', paddingVertical: 5, paddingHorizontal: 25 }}>
                 <TouchableOpacity style={{ padding: 5, borderRadius: 50 }}
-                    onPress={() => setIsShowModal(true)}
+                    onPress={() => {
+                        setFormData(DEAULT_FORM_ROOM);
+                        setIsShowModal(true);
+                    }}
                 >
                     <AntDesign name="plus" size={35} color="black" />
                 </TouchableOpacity>
@@ -43,7 +90,7 @@ export default ListingScreen = ({ navigation }) => {
                         return (
                             <TouchableOpacity
                                 onPress={() => {
-                                    setIsShowModal(true);
+                                    getDetailRoom(data.roomResponse.id);
                                 }}
                                 key={index}
                                 style={{
@@ -89,9 +136,9 @@ export default ListingScreen = ({ navigation }) => {
 
             <Modal
                 visible={isShowModal}
-                onRequestClose={() => setIsShowModal(false)}
+                onRequestClose={() => {setIsShowModal(false); console.log(2)}}
             >
-                <AddPlaceScreen setIsShowModal={setIsShowModal}/>
+                <AddPlaceScreen setIsShowModal={setIsShowModal} formData={formData}/>
             </Modal>
         </View>
     );

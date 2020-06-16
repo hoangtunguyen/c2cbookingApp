@@ -11,8 +11,8 @@ import {
 import { baseURL } from "../../util/Util";
 import ImagePicker from 'react-native-image-picker';
 
-export default UploadImageComponent = ({setFormRequest}) => {
-    const [photo, setPhoto] = useState('https://res.cloudinary.com/ogcodes/image/upload/v1581387688/m0e7y6s5zkktpceh2moq.jpg');
+export default UploadImageComponent = ({setFormRequest, formRequest}) => {
+    const [photo, setPhoto] = useState(formRequest.urlImage);
     async function cloudinaryUpload(source) {
         try {
             var myHeader = new Headers();

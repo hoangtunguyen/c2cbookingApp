@@ -14,18 +14,13 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER
 
 
 
-export default LocationComponent = ({ setFormRequest }) => {
+export default LocationComponent = ({ setFormRequest, formRequest }) => {
     const [cityData, setCityData] = useState([]);
     const DEAULT_COORDINATE = {
-        "lat": 16.068264,
-        "lng": 108.218894,
+        "lat": formRequest.location.lat,
+        "lng": formRequest.location.lng,
     }
-    const [location, setLocation] = useState({
-        "lat": DEAULT_COORDINATE.lat,
-        "lng": DEAULT_COORDINATE.lng,
-        "street": "50 Nguyen Phuoc Thai",
-        "cityId": 1
-    });
+    const [location, setLocation] = useState(formRequest.location);
 
     async function getAllCity() {
         try {
@@ -77,7 +72,7 @@ export default LocationComponent = ({ setFormRequest }) => {
                 <Text style={{ fontSize: 20 }}>Address</Text>
                 <TextInput
                     onChangeText={(text) => { setLocationData({ "street": text }) }}
-                    style={{ fontSize: 16 }} placeholder={'50 Nguyen Phuoc Thai, Thanh Khe'}></TextInput>
+                    style={{ fontSize: 16 }} placeholder={'50 Nguyen Phuoc Thai, Thanh Khe'}>{location.street}</TextInput>
             </View>
             <View style={styles.mapContainer}>
                 <MapView

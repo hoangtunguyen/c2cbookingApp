@@ -22,35 +22,10 @@ import PropertyAndGuestComponent from "../../components/AddPlaceComponent/Proper
 import UploadImageComponent from "../../components/AddPlaceComponent/UploadImageComponent";
 import Toast from 'react-native-simple-toast';
 
-export default AddPlaceScreen = ({ setIsShowModal }) => {
+export default AddPlaceScreen = ({ setIsShowModal, formData }) => {
+    // console.log(formData);
     const [formRequest, setFormRequest] = useState(
-        {
-            "roomName": '',
-            "description": '',
-
-            "price": 0,
-            "serviceFee": 0.00,
-            "feeIncreasingPerson": 0,
-
-            "roomTypeId": 0,
-            "guestCount": 0,
-            "bedroomCount": 0,
-            "bedCount": 0,
-            "bathroomCount": 0,
-            "minGuestCount": 0,
-
-
-
-            "location": {
-                "lat": "23.2222",
-                "lng": "23.3333",
-                "street": "50 Nguyen Phuoc Thai",
-                "cityId": 1
-            },
-            "ownerId": 1,
-            "urlImage": "https://i.imgur.com/1BZTQO6.png",
-            "amenityIdList": [1, 2, 3]
-        }
+        formData
     );
     const setObjJson = (obj) => {
         setFormRequest((pre) => {
@@ -70,11 +45,15 @@ export default AddPlaceScreen = ({ setIsShowModal }) => {
                 },
                 body: JSON.stringify(request)
             });
-            if(response.status == 200){
-               console.log("add success");
-               Toast.show('Room has added to your list places.', Toast.LONG);
+            if (response.status == 200) {
+                if(formRequest.roomId != null){
+                    Toast.show('Room has updated, please check again', Toast.LONG);
+                }else{
+                    Toast.show('Room has added to your list places.', Toast.LONG);
 
-               setIsShowModal(false);
+                }
+
+                setIsShowModal(false);
             }
         }
         catch (error) {
@@ -97,34 +76,34 @@ export default AddPlaceScreen = ({ setIsShowModal }) => {
             <View style={{ backgroundColor: 'white' }}>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Property and guests</Text>
-                    <PropertyAndGuestComponent setFormRequest={setFormRequest} />
+                    <PropertyAndGuestComponent setFormRequest={setFormRequest} formRequest={formRequest} />
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Location</Text>
-                    <LocationComponent setFormRequest={setFormRequest} />
+                    <LocationComponent setFormRequest={setFormRequest} formRequest={formRequest} />
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Amenities</Text>
-                    <ListAmenityComponent setFormRequest={setFormRequest} />
+                    <ListAmenityComponent setFormRequest={setFormRequest} formRequest={formRequest} />
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Photo</Text>
-                    <UploadImageComponent setFormRequest={setFormRequest} />
-                
+                    <UploadImageComponent setFormRequest={setFormRequest} formRequest={formRequest} />
+
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Title</Text>
                     <Text style={{ fontSize: 20 }}>What is your place name?</Text>
                     <TextInput
                         onChangeText={(text) => { setObjJson({ "roomName": text }) }}
-                        style={{ fontSize: 16 }} placeholder={'Input name of your place'}></TextInput>
+                        style={{ fontSize: 16 }} placeholder={'Input name of your place'}>{formRequest.roomName}</TextInput>
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Decription</Text>
                     <Text style={{ fontSize: 20 }}>Decribe your place?</Text>
                     <TextInput
                         onChangeText={(text) => { setObjJson({ "description": text }) }}
-                        style={{ fontSize: 16 }} placeholder={'Input name of your place'}></TextInput>
+                        style={{ fontSize: 16 }} placeholder={'Input name of your place'}>{formRequest.description}</TextInput>
                 </View>
                 <View style={styles.boxItem}>
                     <Text style={styles.textItem}>Pricing</Text>
@@ -132,19 +111,19 @@ export default AddPlaceScreen = ({ setIsShowModal }) => {
                         <Text style={{ fontSize: 18 }}>Price of place</Text>
                         <TextInput
                             onChangeText={(val) => { setObjJson({ "price": +val }) }}
-                            style={{ fontSize: 18 }} placeholder={'20' + ' $'}></TextInput>
+                            style={{ fontSize: 18 }} placeholder={'20' + ' $'}>{formRequest.price == 0 ? '' : formRequest.price}</TextInput>
                     </View>
                     <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={{ fontSize: 18 }}>Service Fee</Text>
                         <TextInput
                             onChangeText={(val) => { setObjJson({ "serviceFee": +val }) }}
-                            style={{ fontSize: 18 }} placeholder={'20' + ' $'}></TextInput>
+                            style={{ fontSize: 18 }} placeholder={'20' + ' $'}>{formRequest.serviceFee == 0 ? '' : formRequest.serviceFee}</TextInput>
                     </View>
                     <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={{ fontSize: 18 }}>Fee of increasing guest</Text>
                         <TextInput
                             onChangeText={(val) => { setObjJson({ "feeIncreasingPerson": +val }) }}
-                            style={{ fontSize: 18 }} placeholder={'20' + ' $'}></TextInput>
+                            style={{ fontSize: 18 }} placeholder={'20' + ' $'}>{formRequest.feeIncreasingPerson == 0 ? '' : formRequest.feeIncreasingPerson}</TextInput>
                     </View>
                 </View>
                 <TouchableOpacity

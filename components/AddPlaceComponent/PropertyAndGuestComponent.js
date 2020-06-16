@@ -11,8 +11,8 @@ import {
 import { baseURL } from "../../util/Util";
 import CheckBox from 'react-native-check-box'
 import InputSpinner from "react-native-input-spinner";
-export default PropertyAndGuestComponent = ({setFormRequest}) => {
-    const [propertyRequest, setPropertyRequest] = useState({roomTypeId: null });
+export default PropertyAndGuestComponent = ({setFormRequest, formRequest}) => {
+    const [propertyRequest, setPropertyRequest] = useState({roomTypeId: formRequest.roomTypeId });
 
     const [dataRoomType, setDataRoomType] = useState(null);
     async function getDataRoomType() {
@@ -78,12 +78,12 @@ export default PropertyAndGuestComponent = ({setFormRequest}) => {
                         <Text style={{ fontSize: 18 }}>Number of guests: </Text>
                     </View>
                     <InputSpinner
-                        max={5}
-                        min={2}
+                        max={10}
+                        min={1}
                         step={1}
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
-                        value={1}
+                        value={formRequest.guestCount}
                         onChange={(num) => {
                             setProperty({"guestCount": num})
                         }}
@@ -97,12 +97,12 @@ export default PropertyAndGuestComponent = ({setFormRequest}) => {
                         <Text style={{ fontSize: 18 }}>Guest Bedrooms</Text>
                     </View>
                     <InputSpinner
-                        max={5}
-                        min={2}
+                        max={10}
+                        min={0}
                         step={1}
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
-                        value={1}
+                        value={formRequest.bedroomCount}
                         onChange={(num) => {
                             setProperty({"bedroomCount": num})
                         }}
@@ -116,12 +116,12 @@ export default PropertyAndGuestComponent = ({setFormRequest}) => {
                         <Text style={{ fontSize: 18 }}>Beds for guests </Text>
                     </View>
                     <InputSpinner
-                        max={5}
-                        min={2}
+                        max={10}
+                        min={0}
                         step={1}
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
-                        value={1}
+                        value={formRequest.bedCount}
                         onChange={(num) => {
                             setProperty({"bedCount": num})
                         }}
@@ -135,12 +135,12 @@ export default PropertyAndGuestComponent = ({setFormRequest}) => {
                         <Text style={{ fontSize: 18 }}>Bathrooms for guests </Text>
                     </View>
                     <InputSpinner
-                        max={5}
-                        min={2}
+                        max={10}
+                        min={0}
                         step={1}
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
-                        value={1}
+                        value={formRequest.bathroomCount}
                         onChange={(num) => {
                             setProperty({"bathroomCount": num})
                         }}
@@ -157,12 +157,12 @@ export default PropertyAndGuestComponent = ({setFormRequest}) => {
                         <Text style={{ fontSize: 18 }}>Guests (At least) </Text>
                     </View>
                     <InputSpinner
-                        max={5}
-                        min={2}
+                        max={10}
+                        min={1}
                         step={1}
                         colorMax={"#f04048"}
                         colorMin={"#40c5f4"}
-                        value={1}
+                        value={formRequest.minGuestCount}
                         onChange={(num) => {
                             setProperty({"minGuestCount": num})
                         }}
