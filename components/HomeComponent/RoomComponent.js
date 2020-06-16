@@ -11,6 +11,7 @@ import {
     Image,
     Button,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {
     Header,
@@ -27,9 +28,11 @@ export default Room = ({navigation, plusFontSize, data }) => {
     const DOLLAR_SIGN = '\u0024'
     const [isFavorite, setIsFavorite] = useState(null);
     const idRoomCon = data.id;
-    async function isFavoriteFc(userId, roomId) {
+    async function isFavoriteFc(roomId) {
+        const USER_ID = await AsyncStorage.getItem('userId');
+
         try {
-            const response = await fetch(baseURL + '/room/isFavorite?userId=' + userId+'&roomId='+roomId);
+            const response = await fetch(baseURL + '/room/isFavorite?userId=' + USER_ID+'&roomId='+roomId);
             const data = await response.json();
             if(data.data){
                 setIsFavorite(true);
@@ -46,12 +49,12 @@ export default Room = ({navigation, plusFontSize, data }) => {
     //     isFavoriteFc(1, data.id);
     // }, []);
     useEffect(() => {
-        isFavoriteFc(1, data.id);
+        isFavoriteFc(data.id);
     });
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
           // do something
-          isFavoriteFc(1, data.id);
+          isFavoriteFc(data.id);
         });
         return unsubscribe;
       }, [navigation]);
@@ -62,7 +65,7 @@ export default Room = ({navigation, plusFontSize, data }) => {
                 <Image source={{ uri: data.urlImage }}
                     style={{ flex: 1, width: null, height: null, resizeMode: 'cover', borderRadius: 10 }} />
                 <TouchableOpacity style={{position: 'absolute', right: 10, top : 10}}
-                 onPress={() => addOrDeleteFavorite({title: data.name, roomId: data.id, userId: 1}, setIsFavorite)}
+                 onPress={() => addOrDeleteFavorite({title: data.name, roomId: data.id}, setIsFavorite)}
                 >
                     <Icon name="gratipay" size={30 + plusFontSize * 4} color={isFavorite ? "red" : "white"} />
                 </TouchableOpacity>

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AmenitiesComponent from "../components/OtherComponent/AmenitiesComponent";
 import MapComponent from "../components/OtherComponent/MapComponent";
 import { baseURL, addOrDeleteFavorite } from "../util/Util";
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default DetailRoomScreen = ({ navigation, route }) => {
     const DOLLAR_SIGN = '\u0024';
@@ -21,9 +22,10 @@ export default DetailRoomScreen = ({ navigation, route }) => {
             console.error(error);
         }
     };
-    async function isFavoriteFc(userId, roomId) {
+    async function isFavoriteFc(roomId) {
+        const USER_ID = await AsyncStorage.getItem('userId');
         try {
-            const response = await fetch(baseURL + '/room/isFavorite?userId=' + userId + '&roomId=' + roomId);
+            const response = await fetch(baseURL + '/room/isFavorite?userId=' + USER_ID + '&roomId=' + roomId);
             const data = await response.json();
             if (data.data) {
                 setIsFavorite(true);
@@ -39,7 +41,7 @@ export default DetailRoomScreen = ({ navigation, route }) => {
     useEffect(() => {
         let idRoom = route.params["idRoom"];
         getDetailRoom(idRoom);
-        isFavoriteFc(1, idRoom);
+        isFavoriteFc(idRoom);
     }, []);
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -53,7 +55,7 @@ export default DetailRoomScreen = ({ navigation, route }) => {
                                 <Image source={{ uri: detailData.urlImage }}
                                     style={{ flex: 1, width: screenWidth, height: 233, resizeMode: 'cover' }} />
                                 <TouchableOpacity style={{ position: 'absolute', right: 10, top: 10 }}
-                                    onPress={() => addOrDeleteFavorite({ title: detailData.name, roomId: detailData.id, userId: 1 }, setIsFavorite)}
+                                    onPress={() => addOrDeleteFavorite({ title: detailData.name, roomId: detailData.id}, setIsFavorite)}
                                 >
                                     <Icon name="gratipay" size={50} color={isFavorite ? "red" : "white"} />
                                 </TouchableOpacity>

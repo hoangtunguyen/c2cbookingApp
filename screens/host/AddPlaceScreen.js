@@ -20,6 +20,7 @@ import ListAmenityComponent from "../../components/AddPlaceComponent/ListAmenity
 import LocationComponent from "../../components/AddPlaceComponent/LocationComponent";
 import PropertyAndGuestComponent from "../../components/AddPlaceComponent/PropertyAndGuestComponent";
 import UploadImageComponent from "../../components/AddPlaceComponent/UploadImageComponent";
+import Toast from 'react-native-simple-toast';
 
 export default AddPlaceScreen = ({ setIsShowModal }) => {
     const [formRequest, setFormRequest] = useState(
@@ -71,6 +72,8 @@ export default AddPlaceScreen = ({ setIsShowModal }) => {
             });
             if(response.status == 200){
                console.log("add success");
+               Toast.show('Room has added to your list places.', Toast.LONG);
+
                setIsShowModal(false);
             }
         }

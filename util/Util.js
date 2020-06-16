@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Moment from 'moment';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const MILISECONDS_PER_DAY = 86400000;
 export const countDays = (start, finish) => {
@@ -7,7 +8,7 @@ export const countDays = (start, finish) => {
     let duration = new Date(finish) - new Date(start);
     return (duration / MILISECONDS_PER_DAY) + 1;
 }
-export const baseURL = "http://192.168.88.102:8080";
+export const baseURL = "http://192.168.1.3:8080";
 
 export const calTotalPrice = (data) => {
     let increasingFee = data.guests > data.minGuests ? (data.guests - data.minGuests) * data.increasingPrice : 0 
@@ -29,6 +30,7 @@ export const DEFAULT_DATA_ROOM = {
 };
 
 export async function addOrDeleteFavorite(data, setResponse) {
+    const USER_ID = await AsyncStorage.getItem('userId');
     try {
         const response = await fetch(baseURL + '/room/addOrDeleteFavorite', {
             method: 'POST',
@@ -39,7 +41,7 @@ export async function addOrDeleteFavorite(data, setResponse) {
             body: JSON.stringify({
                 title : data.title,
                 roomId: data.roomId,
-                userId : data.userId
+                userId : USER_ID
             })
         });
         if(response.status == 200){

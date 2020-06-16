@@ -3,14 +3,17 @@ import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-nati
 import RoomComponent from '../components/HomeComponent/RoomComponent';
 import { DEFAULT_DATA_ROOM } from "../util/Util";
 import { baseURL } from "../util/Util";
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default FavoriteScreen = ({ navigation }) => {
     const screenWidth = Math.round(Dimensions.get('window').width);
     const [favoriteData, setFavoriteData] = useState(null);
 
     async function getFavoriteRoomsByUser() {
+        const USER_ID = await AsyncStorage.getItem('userId');
+
         try {
-            const response = await fetch(baseURL + '/room/listFavorite?userId=' + 1);
+            const response = await fetch(baseURL + '/room/listFavorite?userId=' + USER_ID);
             const data = await response.json();
             setFavoriteData(data);
         }

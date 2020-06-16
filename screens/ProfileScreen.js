@@ -5,20 +5,21 @@ import { baseURL } from "../util/Util";
 import ModalRN from 'react-native-modal';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { countDays, calTotalPrice, dataFormat } from "../util/Util";
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default ProfileScreen = ({navigation}) => {
     const [isShowModal, setIsShowModal] = useState(false);
     const [bookingData, setBookingData] = useState(null);
     const [bookingDetail, setBookingDetail] = useState(null);
-
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => {
         // setIsEnabled(previousState => !previousState);
         navigation.navigate('Host');
     };
-    async function getBookingListByUserId(userId) {
+    async function getBookingListByUserId() {
+        const USER_ID = await AsyncStorage.getItem('userId');
         try {
-            const response = await fetch(baseURL + '/booking/list?userId=' + userId);
+            const response = await fetch(baseURL + '/booking/list?userId=' + USER_ID);
             const data = await response.json();
             setBookingData(data);
         }
@@ -39,10 +40,10 @@ export default ProfileScreen = ({navigation}) => {
         }
     };
     useEffect(() => {
-        getBookingListByUserId(1);
+        getBookingListByUserId();
     }, []);
     useEffect(() => {
-        getBookingListByUserId(1);
+        getBookingListByUserId();
     });
     const totalPrice = (bookingDetail) => {
         return calTotalPrice({

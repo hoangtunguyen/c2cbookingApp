@@ -94,13 +94,13 @@ const HomeTabNavigator = ({ navigation, route }) => {
       })}
     >
       <Tab.Screen name="Home" component={HomeStackNavigator} />
-      <Tab.Screen name="Shared" component={SharedScreen} />
+      {/* <Tab.Screen name="Shared" component={SharedScreen} />
       <Tab.Screen
         // options={{
         //   tabBarLabel: '',
         // }}
         name="Inbox"
-        component={InboxScreen} />
+        component={InboxScreen} /> */}
       <Tab.Screen name="Favorite" component={FavoriteScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
@@ -147,12 +147,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
       >
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Welcome" component={WelcomeScreen}
           options={({ route }) => ({
             // title: getHeaderTitle(route),
             headerShown: false
-          })} /> */}
+          })} />
         <Stack.Screen
           name="Home" component={HomeTabNavigator}
           options={({ route }) => ({

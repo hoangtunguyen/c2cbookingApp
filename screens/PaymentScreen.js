@@ -64,6 +64,7 @@ export default PaymentScreen = ({ navigation, route }) => {
     }
 
     async function bookRoom() {
+        const USER_ID = await AsyncStorage.getItem('userId');
         try {
             const response = await fetch(baseURL + '/booking', {
                 method: 'POST',
@@ -76,7 +77,7 @@ export default PaymentScreen = ({ navigation, route }) => {
                     "checkOutDate": data.checkOut,
                     "bookingDate": new Date(),
                     "roomId": data.id,
-                    "userId": 1,
+                    "userId": USER_ID,
                     "infantCount": 0,
                     "guestCount": guests,
                     "totalCost": totalPrice()+ "",

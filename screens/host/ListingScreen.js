@@ -3,13 +3,16 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Switch, Mo
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AddPlaceScreen from "../host/AddPlaceScreen";
 import { baseURL } from "../../util/Util";
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default ListingScreen = ({ navigation }) => {
     const [isShowModal, setIsShowModal] = useState(false);
     const [listRoomData, setListRoomData] = useState(null);
-    async function getListRoom(userId) {
+    async function getListRoom() {
+        const USER_ID = await AsyncStorage.getItem('userId');
+
         try {
-            const response = await fetch(baseURL + '/host/listings?userId=' + userId);
+            const response = await fetch(baseURL + '/host/listings?userId=' + USER_ID);
             const data = await response.json();
             setListRoomData(data);
         }
@@ -18,10 +21,10 @@ export default ListingScreen = ({ navigation }) => {
         }
     };
     useEffect(() => {
-        getListRoom(1);
+        getListRoom();
     }, []);
     useEffect(() => {
-        getListRoom(1);
+        getListRoom();
     }, [isShowModal]);
     return (
         <View style={{ backgroundColor: 'white', height: '100%' }}>
@@ -39,6 +42,9 @@ export default ListingScreen = ({ navigation }) => {
                     {listRoomData != null && listRoomData.length > 0 && listRoomData.map((data, index) => {
                         return (
                             <TouchableOpacity
+                                onPress={() => {
+                                    setIsShowModal(true);
+                                }}
                                 key={index}
                                 style={{
                                     margin: 15,
@@ -85,7 +91,7 @@ export default ListingScreen = ({ navigation }) => {
                 visible={isShowModal}
                 onRequestClose={() => setIsShowModal(false)}
             >
-                <AddPlaceScreen setIsShowModal={setIsShowModal} />
+                <AddPlaceScreen setIsShowModal={setIsShowModal}/>
             </Modal>
         </View>
     );

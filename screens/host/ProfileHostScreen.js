@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { baseURL } from "../../util/Util";
 import ModalRN from 'react-native-modal';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-export default ProfileHostScreen = ({navigation}) => {
+export default ProfileHostScreen = ({ navigation }) => {
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => {
         // setIsEnabled(previousState => !previousState);
@@ -21,8 +21,8 @@ export default ProfileHostScreen = ({navigation}) => {
                     <Text style={{ fontSize: 22 }}>Nguyen Hoang Tu</Text>
                 </View>
             </LinearGradient>
-            <View style={{ backgroundColor: 'transparent', marginHorizontal: 20 }}>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between',  paddingVertical: 10}}>
+            <View style={{ backgroundColor: 'white', paddingHorizontal: 20 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10 }}>
                     <Text style={{ fontWeight: '700', fontSize: 22 }}>Switch to Guest</Text>
                     <Switch
                         trackColor={{ false: "#767577", true: "#81b0ff" }}
@@ -33,6 +33,8 @@ export default ProfileHostScreen = ({navigation}) => {
                         value={isEnabled}
                     />
                 </View>
+               
+                
             </View>
         </ScrollView>
     );
