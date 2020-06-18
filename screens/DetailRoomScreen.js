@@ -90,7 +90,7 @@ export default DetailRoomScreen = ({ navigation, route }) => {
                                 </View>
                                 <View>
                                     <Text style={{ fontSize: 22, fontWeight: '700' }}>Location</Text>
-                                    <View style={{ backgroundColor: 'red', height: 200, marginRight: 20 }}>
+                                    <View style={{ backgroundColor: 'white', height: 200, marginRight: 20 }}>
                                         <MapComponent data={detailData} />
                                     </View>
                                 </View>

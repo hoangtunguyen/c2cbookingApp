@@ -23,11 +23,13 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import CheckBox from 'react-native-check-box'
 import { baseURL } from "../../util/Util";
 import ModalRN from 'react-native-modal';
+import RangeSlider from 'rn-range-slider';
 
 export default Search = ({ setData, dataSearch }) => {
     const [isShowModal, setIsShowModal] = useState(false);
     const [dataRoomType, setDataRoomType] = useState(null);
-
+    const DEAULT_MIN_PRICE = 0;
+    const DEAULT_MAX_PRICE = 500;
     const [searchData, setSearchData] = useState(dataSearch != undefined ? dataSearch : {
         guestCount: null,
         minPrice: null,
@@ -54,7 +56,7 @@ export default Search = ({ setData, dataSearch }) => {
     };
     const countFilters = () => {
         let count = 0;
-        for (let key in searchData){
+        for (let key in searchData) {
             count += searchData[key] != null ? 1 : 0;
         }
         // setCountFilters(count);
@@ -91,9 +93,9 @@ export default Search = ({ setData, dataSearch }) => {
             }
             if (idRoomTypeList != null && idRoomTypeList.length > 0) idRoomTypeList = idRoomTypeList.substring(0, idRoomTypeList.length - 1);
             else idRoomTypeList = null;
-            
+
             // console.log(idRoomTypeList);
-            let tempSearchData = {...searchData};
+            let tempSearchData = { ...searchData };
             tempSearchData.roomTypeId = idRoomTypeList;
             setSearchData(tempSearchData);
         }
@@ -177,6 +179,35 @@ export default Search = ({ setData, dataSearch }) => {
 
                             </View>
                         </View>
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ fontSize: 20, fontWeight: '700' }}>Price</Text>
+                            <View style={{ flexDirection: 'row', backgroundColor: 'white', justifyContent: 'center', alignContent: 'center' }}>
+                                <View style={{ justifyContent: 'flex-end' }}><Text style={{ fontSize: 20 }}>{searchData.minPrice == null ? DEAULT_MIN_PRICE : searchData.minPrice}$</Text></View>
+                                <RangeSlider
+                                    style={{ flex: 1, height: 60, backgroundColor: 'white' }}
+                                    gravity={'top'}
+                                    min={DEAULT_MIN_PRICE}
+                                    max={DEAULT_MAX_PRICE}
+                                    step={10}
+                                    selectionColor="#3df"
+                                    blankColor="#f618"
+                                    initialLowValue={searchData.minPrice == null ? DEAULT_MIN_PRICE : searchData.minPrice}
+                                    initialHighValue={searchData.maxPrice == null ? DEAULT_MAX_PRICE : searchData.maxPrice}
+                                    onValueChanged={(low, high, fromUser) => {
+                                        console.log(low, high, fromUser);
+                                        setSearchData((pre) => {
+                                            return {
+                                                ...pre,
+                                                minPrice : low,
+                                                maxPrice : high
+                                            }
+                                        })
+                                    }} />
+                                <View style={{ justifyContent: 'flex-end' }}><Text style={{ fontSize: 20 }}>{searchData.maxPrice == null ? DEAULT_MAX_PRICE : searchData.maxPrice}$</Text></View>
+                            </View>
+
+                        </View>
+
                     </View>
                 </View>
             </ModalRN>

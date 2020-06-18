@@ -43,7 +43,7 @@ export default WelcomeScreen = ({ navigation }) => {
        storeData(data.userId);
       }
       else if (response.status == 404) {
-        Toast.show(data.message, Toast.LONG);
+        Toast.show(data.message, Toast.SHORT);
 
       }
     }

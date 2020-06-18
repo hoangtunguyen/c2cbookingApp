@@ -8,7 +8,7 @@ export const countDays = (start, finish) => {
     let duration = new Date(finish) - new Date(start);
     return (duration / MILISECONDS_PER_DAY) + 1;
 }
-export const baseURL = "http://192.168.1.3:8080";
+export const baseURL = "http://192.168.1.2:8080";
 
 export const calTotalPrice = (data) => {
     let increasingFee = data.guests > data.minGuests ? (data.guests - data.minGuests) * data.increasingPrice : 0 
