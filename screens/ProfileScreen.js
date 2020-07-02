@@ -7,11 +7,13 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { countDays, calTotalPrice, dataFormat } from "../util/Util";
 import AsyncStorage from '@react-native-community/async-storage';
 
-export default ProfileScreen = ({navigation}) => {
+export default ProfileScreen = ({ navigation }) => {
     const [isShowModal, setIsShowModal] = useState(false);
     const [bookingData, setBookingData] = useState(null);
     const [bookingDetail, setBookingDetail] = useState(null);
     const [isEnabled, setIsEnabled] = useState(false);
+    const [profile, setProfile] = useState(null);
+
     const toggleSwitch = () => {
         // setIsEnabled(previousState => !previousState);
         navigation.navigate('Host');
@@ -39,8 +41,20 @@ export default ProfileScreen = ({navigation}) => {
             console.error(error);
         }
     };
+    async function getProfile() {
+        const USER_ID = await AsyncStorage.getItem('userId');
+        try {
+            const response = await fetch(baseURL + '/profile?id=' + USER_ID);
+            const data = await response.json();
+            setProfile(data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
         getBookingListByUserId();
+        getProfile();
     }, []);
     useEffect(() => {
         getBookingListByUserId();
@@ -59,16 +73,20 @@ export default ProfileScreen = ({navigation}) => {
     return (
         <ScrollView style={{ flex: 1 }}>
             <LinearGradient colors={['#a1c4fd', '#c2e9fb']} style={styles.linearGradient}>
-                <View style={{ height: 130, width: 130, backgroundColor: 'transparent' }}>
-                    <Image source={{ uri: 'https://i.imgur.com/AJhukbs.jpg' }}
-                        style={{ flex: 1, width: null, height: null, resizeMode: 'cover', borderRadius: 100 }} />
-                </View>
-                <View style={{ marginTop: 10 }}>
-                    <Text style={{ fontSize: 22 }}>Nguyen Hoang Tu</Text>
-                </View>
+                {
+                    profile != null && <View>
+                        <View style={{ height: 130, width: 130, backgroundColor: 'transparent' }}>
+                            <Image source={{ uri: profile.urlImage }}
+                                style={{ flex: 1, width: null, height: null, resizeMode: 'cover', borderRadius: 100 }} />
+                        </View>
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ fontSize: 22, textAlign: 'center' }}>{profile.userName}</Text>
+                        </View>
+                    </View>
+                }
             </LinearGradient>
             <View style={{ backgroundColor: 'transparent', marginHorizontal: 20 }}>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between',  paddingVertical: 10}}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10 }}>
                     <Text style={{ fontWeight: '700', fontSize: 22 }}>Switch to Owner</Text>
                     <Switch
                         trackColor={{ false: "#767577", true: "#81b0ff" }}

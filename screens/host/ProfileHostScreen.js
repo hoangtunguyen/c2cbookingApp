@@ -4,22 +4,44 @@ import LinearGradient from 'react-native-linear-gradient';
 import { baseURL } from "../../util/Util";
 import ModalRN from 'react-native-modal';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import AsyncStorage from '@react-native-community/async-storage';
+
 export default ProfileHostScreen = ({ navigation }) => {
     const [isEnabled, setIsEnabled] = useState(false);
+    const [profile, setProfile] = useState(null);
+
     const toggleSwitch = () => {
         // setIsEnabled(previousState => !previousState);
         navigation.navigate('Home');
     };
+    async function getProfile() {
+        const USER_ID = await AsyncStorage.getItem('userId');
+        try {
+            const response = await fetch(baseURL + '/profile?id=' + USER_ID);
+            const data = await response.json();
+            setProfile(data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+    useEffect(() => {
+        getProfile();
+    }, []);
     return (
         <ScrollView>
             <LinearGradient colors={['#a1c4fd', '#c2e9fb']} style={styles.linearGradient}>
-                <View style={{ height: 130, width: 130, backgroundColor: 'transparent' }}>
-                    <Image source={{ uri: 'https://i.imgur.com/AJhukbs.jpg' }}
-                        style={{ flex: 1, width: null, height: null, resizeMode: 'cover', borderRadius: 100 }} />
-                </View>
-                <View style={{ marginTop: 10 }}>
-                    <Text style={{ fontSize: 22 }}>Nguyen Hoang Tu</Text>
-                </View>
+                {
+                    profile != null && <View>
+                        <View style={{ height: 130, width: 130, backgroundColor: 'transparent' }}>
+                            <Image source={{ uri: profile.urlImage }}
+                                style={{ flex: 1, width: null, height: null, resizeMode: 'cover', borderRadius: 100 }} />
+                        </View>
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ fontSize: 22, textAlign: 'center' }}>{profile.userName}</Text>
+                        </View>
+                    </View>
+                }
             </LinearGradient>
             <View style={{ backgroundColor: 'white', paddingHorizontal: 20 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10 }}>
@@ -33,8 +55,8 @@ export default ProfileHostScreen = ({ navigation }) => {
                         value={isEnabled}
                     />
                 </View>
-               
-                
+
+
             </View>
         </ScrollView>
     );
