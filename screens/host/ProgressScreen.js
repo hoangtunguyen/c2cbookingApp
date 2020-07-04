@@ -29,7 +29,7 @@ export default ProgressScreen = () => {
         <View style={{ height: screenHeight, backgroundColor: 'white' }}>
             <TouchableOpacity onPress={() => console.log('press')}>
                 <Calendar
-                    current={new Date()}
+                    current={pickDate}
                     markingType={'period'}
                     markedDates={{
                         '2020-06-11': { textColor: 'red' },
