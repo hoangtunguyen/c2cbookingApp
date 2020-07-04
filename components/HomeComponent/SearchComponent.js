@@ -96,7 +96,7 @@ export default Search = ({ setData, dataSearch }) => {
 
             // console.log(idRoomTypeList);
             let tempSearchData = { ...searchData };
-            tempSearchData.roomTypeId = idRoomTypeList;
+            tempSearchData.roomTypeId = idRoomTypeList != null && idRoomTypeList.length == 0 ? null : idRoomTypeList;
             setSearchData(tempSearchData);
         }
     }, [dataRoomType])
@@ -198,8 +198,8 @@ export default Search = ({ setData, dataSearch }) => {
                                         setSearchData((pre) => {
                                             return {
                                                 ...pre,
-                                                minPrice : low,
-                                                maxPrice : high
+                                                minPrice : low == DEAULT_MIN_PRICE ? null : low,
+                                                maxPrice : high == DEAULT_MAX_PRICE ? null : high
                                             }
                                         })
                                     }} />
