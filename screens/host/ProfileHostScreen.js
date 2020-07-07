@@ -55,7 +55,10 @@ export default ProfileHostScreen = ({ navigation }) => {
                         value={isEnabled}
                     />
                 </View>
+                <View style={{backgroundColor: 'white', width: '100%', height: 500}}>
 
+                    {/* <Text>Welcome to Host</Text> */}
+                </View>
 
             </View>
         </ScrollView>

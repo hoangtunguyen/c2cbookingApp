@@ -55,13 +55,17 @@ export default DetailRoomScreen = ({ navigation, route }) => {
                                 <Image source={{ uri: detailData.urlImage }}
                                     style={{ flex: 1, width: screenWidth, height: 233, resizeMode: 'cover' }} />
                                 <TouchableOpacity style={{ position: 'absolute', right: 10, top: 10 }}
-                                    onPress={() => addOrDeleteFavorite({ title: detailData.name, roomId: detailData.id}, setIsFavorite)}
+                                    onPress={() => addOrDeleteFavorite({ title: detailData.name, roomId: detailData.id }, setIsFavorite)}
                                 >
                                     <Icon name="gratipay" size={50} color={isFavorite ? "red" : "white"} />
                                 </TouchableOpacity>
                             </View>
                             <View style={{ marginLeft: 15 }}>
                                 <Text style={{ fontSize: 30, fontWeight: '700' }}>{detailData.name}</Text>
+                                <View style={{flexDirection: 'row'}}>
+                                    <Text style={{fontSize: 20, fontWeight: '700'}}>Host:  </Text>
+                                    <Text style={{fontSize: 20}}>{detailData.ownerName}</Text>
+                                </View>
                                 <View style={{ flexDirection: 'row', marginVertical: 10, }}>
                                     <TouchableOpacity style={{ backgroundColor: "#80b3ff", borderRadius: 5, paddingHorizontal: 10, paddingVertical: 3 }}>
                                         <Text style={{ fontSize: 18, fontWeight: "500", textTransform: "uppercase" }}>{detailData.typeRoom}</Text>

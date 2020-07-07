@@ -16,10 +16,10 @@ export default WelcomeScreen = ({ navigation }) => {
       await AsyncStorage.setItem('userId', data +'');
       //   getData();
       // navigation.navigate('Home')
-      const value = await AsyncStorage.getItem('userId');
+      // const value = await AsyncStorage.getItem('userId');
 
-      console.log(value);
-      navigation.navigate('Home')
+      // console.log(value);
+      navigation.navigate('Home');
     } catch (e) {
       // saving error
     }
@@ -45,6 +45,8 @@ export default WelcomeScreen = ({ navigation }) => {
       else if (response.status == 404) {
         Toast.show(data.message, Toast.SHORT);
 
+      }else{
+        Toast.show("CHECK AGAIN", Toast.SHORT);
       }
     }
     catch (error) {
@@ -53,6 +55,8 @@ export default WelcomeScreen = ({ navigation }) => {
   };
   const login = () => {
     signIn();
+    // Toast.show("CHECK AGAIN ...", Toast.SHORT);
+
   };
   return (
     <View style={styles.container}>

@@ -142,6 +142,7 @@ function isHeaderShown(route) {
       return false;
   }
 }
+console.disableYellowBox = true;
 export default function App() {
   return (
     <NavigationContainer>
